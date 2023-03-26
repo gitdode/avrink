@@ -1,0 +1,2 @@
+gmake: *** Keine Regel vorhanden, um das Ziel „usbtherm.elf“, 
+  benötigt von „usbtherm.hex“, zu erstellen.  Schluss.

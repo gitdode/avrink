@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="/home/dode/dev/avrink" name="0">
+      <in>avrink.c</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>/home/dode/dev/avrink/Makefile</itemPath>
+      <itemPath>/home/dode/dev/avrink/nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>/home/dode/dev/avrink</Elem>
+  </sourceRootList>
+  <projectmakefile>/home/dode/dev/avrink/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>AVR|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-Os -funsigned-char -g -ggdb -std=gnu99"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>/home/dode/dev/avrink</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>.</pElem>
+            </incDir>
+            <preprocessorList>
+              <Elem>BAUD=9600</Elem>
+              <Elem>F_CPU=1000000UL</Elem>
+              <Elem>__AVR_ATmega328P__</Elem>
+            </preprocessorList>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="/home/dode/dev/avrink/avrink.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
