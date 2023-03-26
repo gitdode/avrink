@@ -28,10 +28,10 @@
 #define DDR_DISP  DDRD
 #define PORT_DISP PORTD
 #define PINP_DISP PIND
-#define PIN_ECS   PD5 // e-ink chip select
-#define PIN_DC    PD6 // e-ink data/command
-#define PIN_RST   PD7 // e-ink reset
-#define PIN_BUSY  PD4 // e-ink busy
+#define PIN_ECS   PD5 // display chip select
+#define PIN_DC    PD6 // display data/command
+#define PIN_RST   PD7 // display reset
+#define PIN_BUSY  PD4 // display busy
 
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
@@ -51,7 +51,7 @@ static void initPins(void) {
     // set LED pin as output pin
     DDR_LED |= (1 << PIN_LED);
 
-    // set display ECS, DC and RST pin as output pin
+    // set display ECS, D/C and RST pin as output pin
     DDR_DISP |= (1 << PIN_ECS);
     DDR_DISP |= (1 << PIN_DC);
     DDR_DISP |= (1 << PIN_RST);
@@ -75,44 +75,55 @@ static void initTimer(void) {
 
 static void display(void) {
     PORT_LED |= (1 << PIN_LED);
-    PORT_DISP |= (1 << PIN_ECS);
+    
+    // something like that?
+    // set CS low to send command/data
+    // PORT_DISP &= ~(1 << PIN_ECS);
+    // set D/C low to send command
+    // PORT_DISP &= ~(1 << PIN_DC);
+    // set D/C high to send data
+    // PORT_DISP |= (1 << PIN_DC);
+    // set CS high after after sending command/data
+    // PORT_DISP |= (1 << PIN_ECS);
 
     // 1. Power On
-    // Supply VCI
-    // Wait 10ms
+    // VCI already supplied - could supply by MCU output pin?
+    // - Supply VCI
+    // - Wait 10ms
     _delay_ms(10);
 
     // 2. Set Initial Configuration
-    // Define SPI interface to communicate with MCU
-    // HW Reset
-    // SW Reset by Command 0x12
-    // Wait 10ms
+    // board selects 4-wire SPI by pulling BS1 low?
+    // - Define SPI interface to communicate with MCU
+    // - HW Reset
+    // - SW Reset by Command 0x12
+    // - Wait 10ms
     _delay_ms(10);
 
     // 3. Send Initialization Code
-    // Set gate driver output by Command 0x01
-    // Set display RAM size by Command 0x11, 0x44, 0x45
-    // Set panel border by Command 0x3C
+    // - Set gate driver output by Command 0x01
+    // - Set display RAM size by Command 0x11, 0x44, 0x45
+    // - Set panel border by Command 0x3C
 
     // 4. Load Waveform LUT
-    // Sense temperature by int/ext TS by Command 0x18
-    // Load waveform LUT from OTP by Command 0x22, 0x20 or by MCU
-    // Wait BUSY Low
+    // - Sense temperature by int/ext TS by Command 0x18
+    // - Load waveform LUT from OTP by Command 0x22, 0x20 or by MCU
+    // - Wait BUSY Low
     loop_until_bit_is_clear(PINP_DISP, PIN_BUSY);
 
     // 5. Write Image and Drive Display Panel
-    // Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
-    // Set softstart setting by Command 0x0C
-    // Drive display panel by Command 0x22, 0x20
-    // Wait BUSY Low
+    // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
+    // - Set softstart setting by Command 0x0C
+    // - Drive display panel by Command 0x22, 0x20
+    // - Wait BUSY Low
     loop_until_bit_is_clear(PINP_DISP, PIN_BUSY);
 
+    // should do this only when VCI is supplied by MCU pin?
     // 6. Power Off
-    // Deep sleep by Command 0x10
-    // Power OFF
+    // - Deep sleep by Command 0x10
+    // - Power OFF
 
     PORT_LED &= ~(1 << PIN_LED);
-    PORT_DISP &= ~(1 << PIN_ECS);
 }
 
 int main(void) {
@@ -130,7 +141,7 @@ int main(void) {
             once = true;
         }
 
-        // display should not be updated more frequently than every 180 seconds
+        // display should not be updated more frequently than once every 180 seconds
         if (ints >= INTS_SEC * 180) {
             ints = 0;
             // do something and update the display
