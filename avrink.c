@@ -25,6 +25,13 @@
 #define PORT_LED  PORTC
 #define PIN_LED   PC5
 
+#define DDR_SPI   DDRB
+#define PORT_SPI  PORTB
+#define PIN_SS    PB2
+#define PIN_MOSI  PB3
+#define PIN_MISO  PB4
+#define PIN_SCK   PB5
+
 #define DDR_DISP  DDRD
 #define PORT_DISP PORTD
 #define PINP_DISP PIND
@@ -50,13 +57,33 @@ ISR(TIMER0_COMPA_vect) {
 static void initPins(void) {
     // set LED pin as output pin
     DDR_LED |= (1 << PIN_LED);
+    
+    // set MOSI and SCK as output pin
+    DDR_SPI |= (1 << PIN_MOSI);
+    DDR_SPI |= (1 << PIN_SCK);
+    // pull SS (ensure master) and MISO high
+    PORT_SPI |= (1 << PIN_SS);
+    PORT_SPI |= (1 << PIN_MISO);
 
-    // set display ECS, D/C and RST pin as output pin
+    // set display ECS, D/C and RESET pin as output pin
     DDR_DISP |= (1 << PIN_ECS);
     DDR_DISP |= (1 << PIN_DC);
     DDR_DISP |= (1 << PIN_RST);
+    // enable pullup on all output pins
+    PORT_DISP |= (1 << PIN_ECS);
+    PORT_DISP |= (1 << PIN_DC);
+    PORT_DISP |= (1 << PIN_RST);
     // set display BUSY pin as input pin
     DDR_DISP &= ~(1 << PIN_BUSY);
+}
+
+/**
+ * Enables SPI master mode.
+ */
+static void initSPI(void) {
+    SPCR |= (1 << SPR0);
+    SPCR |= (1 << MSTR);
+    SPCR |= (1 << SPE);
 }
 
 /**
@@ -73,8 +100,15 @@ static void initTimer(void) {
     TIMSK0 |= (1 << OCIE0A);
 }
 
+static void spiTransmit(char data) {
+    SPDR = data;
+    loop_until_bit_is_set(SPSR, SPIF);
+}
+
 static void display(void) {
     PORT_LED |= (1 << PIN_LED);
+    
+    spiTransmit('D');
     
     // something like that?
     // set CS low to send command/data
@@ -129,6 +163,7 @@ static void display(void) {
 int main(void) {
 
     initPins();
+    initSPI();
     initTimer();
 
     // enable global interrupts
