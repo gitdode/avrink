@@ -3,6 +3,8 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="/home/dode/dev/avrink" name="0">
       <in>avrink.c</in>
+      <in>usart.c</in>
+      <in>usart.h</in>
     </df>
   </logicalFolder>
   <projectmakefile>/home/dode/dev/avrink/Makefile</projectmakefile>
