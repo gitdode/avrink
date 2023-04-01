@@ -167,13 +167,15 @@ static void printSramStatus(void) {
     printString(string);
 }
 
-static void sram(char *data) {
+static void sramString(char *data) {
     size_t length = strlen(data);
     for (int i = 0; i < length; i++) {
         char c = *data++;
         sramWrite(i, c);
     }
+}
 
+static void sramPrint(size_t length) {
     char read[length + 1];
     for (int i = 0; i < length; i++) {
         read[i] = sramRead(i);
@@ -279,7 +281,10 @@ int main(void) {
             _delay_ms(100);
 
             printSramStatus();
-            sram("hello easter bunny!");
+            
+            char *easter = "hello easter bunny!";
+            sramString(easter);
+            sramPrint(strlen(easter));
 
             // display();
             once = true;
