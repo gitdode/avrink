@@ -5,11 +5,12 @@
  *      Author: dode@luniks.net
  */
 
+#include <stdio.h>
 #include <string.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "usart.h"
 #include <util/setbaud.h>
+#include "usart.h"
 
 static volatile bool usartReceived = false;
 

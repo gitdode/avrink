@@ -98,13 +98,15 @@ static void sramFun(void) {
     printByte(status);
 
     char *easter = "hello easter bunny!";
-    size_t written = sramWriteString(0x000, easter);
+    size_t written = sramWriteString(0x123, easter);
     printUint(written);
 
     size_t length = 19;
-    char *bunny = sramReadString(0x000, length);
+    char bunny[length + 1]; // add 1 for null terminator
+    sramReadString(0x123, bunny, sizeof(bunny));
+    
     char buf[strlen(bunny) + 3];
-    snprintf(buf, sizeof (buf), "%s\r\n", bunny);
+    snprintf(buf, sizeof(buf), "%s\r\n", bunny);
     printString(buf);
 }
 

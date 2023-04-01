@@ -23,8 +23,8 @@
 void sramWrite(uint16_t address, uint8_t data);
 
 /**
- * Writes the given string starting at the given address but never beyond
- * the highest memory address 0x1fff, and returns the number of bytes actually
+ * Writes the given string starting at the given address, never beyond
+ * the highest memory address, and returns the number of bytes actually
  * written.
  * @param startAddress
  * @param data
@@ -40,14 +40,19 @@ size_t sramWriteString(uint16_t startAddress, char *data);
 uint8_t sramRead(uint16_t address);
 
 /**
- * Reads a string with the given length starting at the given address
- * and returns it.
+ * Reads length - 1 bytes starting at the given address, never beyond 
+ * the highest memory address, into the given buffer and adds a trailing 
+ * null terminator.
  * @param startAddress
+ * @param string
  * @param length
- * @return string
  */
-char * sramReadString(uint16_t startAddress, size_t length);
+void sramReadString(uint16_t startAddress, char *string, size_t length);
 
+/**
+ * Reads the status and returns it.
+ * @return 
+ */
 uint8_t sramReadStatus(void);
 
 #endif /* SRAM_H */

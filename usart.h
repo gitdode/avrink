@@ -42,7 +42,7 @@ void printString(char* data);
 void printUint(uint8_t data);
 
 /**
- * Prints the given unsigned integer including CR + LF in binary notation 
+ * Prints the given unsigned integer in binary notation including CR + LF
  * via USART.
  */
 void printByte(uint8_t data);

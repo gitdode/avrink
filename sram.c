@@ -64,19 +64,15 @@ uint8_t sramRead(uint16_t address) {
     return read;
 }
 
-// TODO read until null byte instead of given length?
-char * sramReadString(uint16_t startAddress, size_t length) {
-    char *read = (char *)malloc(length + 1);
-    for (size_t i = 0; i < length; i++) {
+void sramReadString(uint16_t startAddress, char *buf, size_t length) {
+    for (size_t i = 0; i < length - 1; i++) {
         uint16_t address = startAddress + i;
-        read[i] = sramRead(address);
+        buf[i] = sramRead(address);
         if (address == SRAM_HIGH) {
             break;
         }
     }
-    read[length] = '\0';
-    
-    return read;
+    buf[length - 1] = '\0';
 }
 
 uint8_t sramReadStatus(void) {
