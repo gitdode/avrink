@@ -19,50 +19,64 @@ static char usartData[64];
  * Called when data was received via USART.
  */
 ISR(USART_RX_vect) {
-	if (bit_is_set(UCSR0A, RXC0) && ! usartReceived) {
-		char data = UDR0;
-		size_t length = strlen(usartData);
-		if (length < sizeof(usartData) - 1 && data != '\n' && data != '\r') {
-			usartData[length] = data;
-		} else {
-			usartData[length] = '\0';
-			usartReceived = true;
-		}
-	}
+    if (bit_is_set(UCSR0A, RXC0) && !usartReceived) {
+        char data = UDR0;
+        size_t length = strlen(usartData);
+        if (length < sizeof (usartData) - 1 && data != '\n' && data != '\r') {
+            usartData[length] = data;
+        } else {
+            usartData[length] = '\0';
+            usartReceived = true;
+        }
+    }
 }
 
 void initUSART(void) {
-	UBRR0H = UBRRH_VALUE;
-	UBRR0L = UBRRL_VALUE;
+    UBRR0H = UBRRH_VALUE;
+    UBRR0L = UBRRL_VALUE;
 
 #if USE_2X
-	UCSR0A |= (1 << U2X0);
+    UCSR0A |= (1 << U2X0);
 #else
-	UCSR0A &= ~(1 << U2X0);
+    UCSR0A &= ~(1 << U2X0);
 #endif
 
-	UCSR0B = (1 << TXEN0) | (1 << RXEN0);
-	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+    UCSR0B = (1 << TXEN0) | (1 << RXEN0);
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 }
 
 bool isUSARTReceived(void) {
-	return usartReceived;
+    return usartReceived;
 }
 
 void getUSARTData(char* const data, size_t const size) {
-	if (size > 0) {
-	    data[0] = '\0';
-	    strncat(data, usartData, size - 1);
-	    memset(usartData, 0, sizeof(usartData));
-	    usartReceived = false;
-	}
+    if (size > 0) {
+        data[0] = '\0';
+        strncat(data, usartData, size - 1);
+        memset(usartData, 0, sizeof (usartData));
+        usartReceived = false;
+    }
 }
 
 void printString(char* const data) {
-	uint8_t i = 0;
-	char c;
-	while ((c = data[i++]) != '\0') {
-		loop_until_bit_is_set(UCSR0A, UDRE0);
-		UDR0 = c;
-	}
+    uint8_t i = 0;
+    char c;
+    while ((c = data[i++]) != '\0') {
+        loop_until_bit_is_set(UCSR0A, UDRE0);
+        UDR0 = c;
+    }
+}
+
+void printUint(uint8_t data) {
+    char buf[6];
+    snprintf(buf, sizeof (buf), "%d\r\n", data);
+    printString(buf);
+}
+
+void printByte(uint8_t byte) {
+    char string[] = {'0', 'x', '?', '?', '?', '?', '?', '?', '?', '?', '\r', '\n', '\0'};
+    for (int i = 7; i >= 0; i--) {
+        string[9 - i] = byte & (1 << i) ? '1' : '0';
+    }
+    printString(string);
 }

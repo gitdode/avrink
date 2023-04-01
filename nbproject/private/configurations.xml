@@ -3,6 +3,13 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="/home/dode/dev/avrink" name="0">
       <in>avrink.c</in>
+      <in>eink.c</in>
+      <in>eink.h</in>
+      <in>pins.h</in>
+      <in>spi.c</in>
+      <in>spi.h</in>
+      <in>sram.c</in>
+      <in>sram.h</in>
       <in>usart.c</in>
       <in>usart.h</in>
     </df>

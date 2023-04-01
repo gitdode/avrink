@@ -36,4 +36,15 @@ void getUSARTData(char* data, size_t length);
  */
 void printString(char* data);
 
+/**
+ * Prints the given unsigned integer including CR + LF via USART.
+ */
+void printUint(uint8_t data);
+
+/**
+ * Prints the given unsigned integer including CR + LF in binary notation 
+ * via USART.
+ */
+void printByte(uint8_t data);
+
 #endif /* USART_H_ */
