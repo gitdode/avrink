@@ -8,7 +8,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <util/delay.h>
+#include "eink.h"
 #include "pins.h"
+#include "usart.h"
 #include "sram.h"
 #include "spi.h"
 
@@ -40,6 +43,10 @@ static void dcHigh(void) {
     PORT_SRDI |= (1 << PIN_DC);
 }
 
+static void waitBusy(void) {
+    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+}
+
 void display(void) {
     PORT_LED |= (1 << PIN_LED);
 
@@ -61,34 +68,39 @@ void display(void) {
     PORT_SRDI |= (1 << PIN_RST);
 
     _delay_ms(100);
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+    waitBusy();
 
     // - SW Reset by Command 0x12
-    csHigh();
     dcLow();
     csLow();
     transmit(0x12);
+    dcLow();
+    csHigh();
 
     // - Wait 10ms
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+    waitBusy();
     _delay_ms(10);
 
     printString("initial config done\r\n");
 
     // write the first byte of the user id and read it back
     // doesn't seem to work - because the driver is not fully initialized yet?
+    dcLow();
+    csLow();
     transmit(0x38);
     dcHigh();
     transmit(123);
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+    dcLow();
+    csHigh();
 
     dcLow();
+    csLow();
     transmit(0x2e);
     dcHigh();
     uint8_t id = transmit(0);
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
-
+    dcLow();
     csHigh();
+    
     printUint(id);
 
     // 3. Send Initialization Code
@@ -100,14 +112,14 @@ void display(void) {
     // - Sense temperature by int/ext TS by Command 0x18
     // - Load waveform LUT from OTP by Command 0x22, 0x20 or by MCU
     // - Wait BUSY Low
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+    waitBusy();
 
     // 5. Write Image and Drive Display Panel
     // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
     // - Set softstart setting by Command 0x0C
     // - Drive display panel by Command 0x22, 0x20
     // - Wait BUSY Low
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+    waitBusy();
 
     // should do this only when VCI is supplied by MCU pin?
     // 6. Power Off

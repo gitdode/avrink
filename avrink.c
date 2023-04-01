@@ -19,13 +19,13 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
-#include <avr/sleep.h>
 #include <util/delay.h>
 
 #include "pins.h"
 #include "usart.h"
 #include "spi.h"
 #include "sram.h"
+#include "eink.h"
 
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
@@ -126,7 +126,7 @@ int main(void) {
 
         if (!once) {
             sramFun();
-            // display();
+            display();
             once = true;
         }
 

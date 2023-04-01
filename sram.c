@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "pins.h"
 #include "sram.h"
+#include "pins.h"
 #include "spi.h"
 
 #include "usart.h"
