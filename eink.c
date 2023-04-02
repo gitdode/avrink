@@ -74,6 +74,7 @@ void display(void) {
     dcLow();
     csLow();
     transmit(0x12);
+    csHigh();
 
     // - Wait 10ms
     waitBusy();

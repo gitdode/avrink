@@ -10,7 +10,7 @@ Currently implemented:
 * Experimental display initialization
 * Draw a simple "test image"
 
-<img src="https://luniks.net/other/AVRInk-01.jpg" height="405"/>
+<img src="https://luniks.net/other/AVRInk-02.jpg" height="405"/>
 
 Thanks to [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD)
 for helping me out!
