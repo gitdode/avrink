@@ -22,7 +22,7 @@ static void csLow(void) {
 }
 
 /**
- * Delects the SRAM to talk to via SPI.
+ * Deselects the SRAM to talk to via SPI.
  */
 static void csHigh(void) {
     PORT_SRDI |= (1 << PIN_SRCS);

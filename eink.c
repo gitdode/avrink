@@ -16,28 +16,37 @@
 #include "spi.h"
 
 /**
- * Selects the Display to talk to via SPI.
+ * Does a hardware reset.
+ */
+static void hwReset(void) {
+    PORT_SRDI &= ~(1 << PIN_RST);
+    _delay_ms(10);
+    PORT_SRDI |= (1 << PIN_RST);
+}
+
+/**
+ * Selects the display to talk to via SPI.
  */
 static void csLow(void) {
     PORT_SRDI &= ~(1 << PIN_ECS);
 }
 
 /**
- * Selects the Display to talk to via SPI.
+ * Deselects the display to talk to via SPI.
  */
 static void csHigh(void) {
     PORT_SRDI |= (1 << PIN_ECS);
 }
 
 /**
- * Send a command to the Display.
+ * Send a command to the display.
  */
 static void dcLow(void) {
     PORT_SRDI &= ~(1 << PIN_DC);
 }
 
 /**
- * Send data to the Display.
+ * Send data to the display.
  */
 static void dcHigh(void) {
     PORT_SRDI |= (1 << PIN_DC);
@@ -63,9 +72,7 @@ void display(void) {
     // - Define SPI interface to communicate with MCU
 
     // - HW Reset
-    PORT_SRDI &= ~(1 << PIN_RST);
-    _delay_ms(10);
-    PORT_SRDI |= (1 << PIN_RST);
+    hwReset();
 
     _delay_ms(100);
     waitBusy();
@@ -77,7 +84,7 @@ void display(void) {
     csHigh();
 
     // - Wait 10ms
-    waitBusy();
+    waitBusy(); // datasheet mentions BUSY is high during reset
     _delay_ms(10);
 
     printString("done setting initial configuration\r\n");
@@ -181,7 +188,7 @@ void display(void) {
     transmit(0);
     csHigh();
     
-    // write to BW RAM
+    // write to B/W RAM
     dcLow();
     csLow();
     transmit(0x24);
@@ -245,6 +252,7 @@ void display(void) {
     printString("done setting deep sleep\r\n");
     
     // - Power OFF
+    // see 1. Power On
 
     PORT_LED &= ~(1 << PIN_LED);
 }
