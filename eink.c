@@ -78,7 +78,6 @@ static void initDisplay(void) {
 
     // - HW Reset
     hwReset();
-
     _delay_ms(100);
     waitBusy();
 
@@ -102,7 +101,7 @@ static void initDisplay(void) {
     dcHigh();
     transmit(DISPLAY_WIDTH - 1);
     transmit((DISPLAY_WIDTH - 1) >> 8);
-    transmit(0);
+    transmit(0x00); // GD=0 [POR], SM=0 [POR], TB = 0 [POR]
     csHigh();
     
     // - Set display RAM size by Command 0x11, 0x44, 0x45
@@ -110,9 +109,10 @@ static void initDisplay(void) {
     csLow();
     transmit(DATA_ENTRY_MODE_SETTING);
     dcHigh();
-    transmit(0x03); // Define data entry sequence A[2:0] = 011 [POR]
+    transmit(0x03); // A[2:0] = 011 [POR]
     csHigh();
     
+    // i.e. 128 bits but only 122 pixel = 6 pixel cut off
     uint8_t height = DISPLAY_HEIGHT + 8 - DISPLAY_HEIGHT % 8;
     
     dcLow();
@@ -152,38 +152,10 @@ static void initDisplay(void) {
     transmit(0x80); // A[7:0] = 80h Internal temperature sensor
     csHigh();
     
-    // done at the end
+    // done at the end, wait for BUSY low anyway
     // - Load waveform LUT from OTP by Command 0x22, 0x20 or by MCU
     // - Wait BUSY Low
     waitBusy();
-    
-    /*
-    // Vcom voltage
-    dcLow();
-    csLow();
-    transmit(0x2c);
-    dcHigh();
-    transmit(0x36); // not in datasheet table?
-    csHigh();
-    
-    // gate voltage
-    dcLow();
-    csLow();
-    transmit(0x03);
-    dcHigh();
-    transmit(0x17); // 0x17 = 20V = 0x00 [POR]
-    csHigh();
-
-    // source voltage
-    dcLow();
-    csLow();
-    transmit(0x04);
-    dcHigh();
-    transmit(0x41); [POR]
-    transmit(0x00); // not in datasheet table, should be 0xa8 [POR]?
-    transmit(0x32); [POR]
-    csHigh();
-    */
 }
 
 /**
