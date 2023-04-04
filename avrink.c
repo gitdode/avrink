@@ -126,7 +126,7 @@ int main(void) {
 
         if (!once) {
             sramFun();
-            display();
+            writeImage();
             once = true;
         }
 
