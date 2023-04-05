@@ -27,8 +27,6 @@
 #include "sram.h"
 #include "eink.h"
 
-#include "emoji.h"
-
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
 
@@ -155,39 +153,39 @@ static void sramToDisplay(void) {
  */
 static void writeEmoji(void) {
     // somewhere near the center of the display
-    sramWrite(1600, EMOJI00);
-    sramWrite(1601, EMOJI01);
-    sramWrite(1602, EMOJI02);
-    sramWrite(1603, EMOJI03);
-    sramWrite(1604, EMOJI04);
-    sramWrite(1605, EMOJI05);
-    sramWrite(1606, EMOJI06);
-    sramWrite(1607, EMOJI07);
-    sramWrite(1608, EMOJI08);
-    sramWrite(1609, EMOJI09);
-    sramWrite(1610, EMOJI0a);
-    sramWrite(1611, EMOJI0b);
-    sramWrite(1612, EMOJI0c);
-    sramWrite(1613, EMOJI0d);
-    sramWrite(1614, EMOJI0e);
-    sramWrite(1615, EMOJI0f);
+    sramWrite(1600, 0b11111111);
+    sramWrite(1601, 0b11111111);
+    sramWrite(1602, 0b11111111);
+    sramWrite(1603, 0b11111111);
+    sramWrite(1604, 0b11100111);
+    sramWrite(1605, 0b11100111);
+    sramWrite(1606, 0b11111111);
+    sramWrite(1607, 0b11111111);
+    sramWrite(1608, 0b11111111);
+    sramWrite(1609, 0b11111111);
+    sramWrite(1610, 0b11100111);
+    sramWrite(1611, 0b11100111);
+    sramWrite(1612, 0b11111111);
+    sramWrite(1613, 0b11111111);
+    sramWrite(1614, 0b11111111);
+    sramWrite(1615, 0b11111111);
     // jump to next line
-    sramWrite(1850, EMOJI10);
-    sramWrite(1851, EMOJI11);
-    sramWrite(1852, EMOJI12);
-    sramWrite(1853, EMOJI13);
-    sramWrite(1854, EMOJI14);
-    sramWrite(1855, EMOJI15);
-    sramWrite(1856, EMOJI16);
-    sramWrite(1857, EMOJI17);
-    sramWrite(1858, EMOJI18);
-    sramWrite(1859, EMOJI19);
-    sramWrite(1860, EMOJI1a);
-    sramWrite(1861, EMOJI1b);
-    sramWrite(1862, EMOJI1c);
-    sramWrite(1863, EMOJI1d);
-    sramWrite(1864, EMOJI1e);
-    sramWrite(1865, EMOJI1f);
+    sramWrite(1850, 0b11111111);
+    sramWrite(1851, 0b11111111);
+    sramWrite(1852, 0b10011111);
+    sramWrite(1853, 0b10000111);
+    sramWrite(1854, 0b11100111);
+    sramWrite(1855, 0b11110011);
+    sramWrite(1856, 0b11110011);
+    sramWrite(1857, 0b11110011);
+    sramWrite(1858, 0b11110011);
+    sramWrite(1859, 0b11110011);
+    sramWrite(1860, 0b11110011);
+    sramWrite(1861, 0b11100111);
+    sramWrite(1862, 0b10000111);
+    sramWrite(1863, 0b10011111);
+    sramWrite(1864, 0b11111111);
+    sramWrite(1865, 0b11111111);
     
 }
 
