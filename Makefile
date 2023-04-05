@@ -5,7 +5,7 @@
 MCU = atmega328p
 # for NetBeans, see https://www.nongnu.org/avr-libc/user-manual/using_tools.html
 MMCU = __AVR_ATmega328P__
-F_CPU = 1000000
+F_CPU = 8000000
 BAUD = 9600
 PROGRAMMER_TYPE = avrispmkII
 PROGRAMMER_ARGS = 

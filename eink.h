@@ -24,14 +24,36 @@
 #define RAM_X_ADDRESS_COUNTER       0x4e
 #define RAM_Y_ADDRESS_COUNTER       0x4f
 
-#define DISPLAY_WIDTH   250
+#define DISPLAY_WIDTH   250UL
 #define DISPLAY_HEIGHT  122
 #define RAM_X_OFFSET    1
 
 /**
- * Just to experiment for now.
+ * Returns the height in bytes.
+ * @return bytes
  */
-void writeImage(void);
+uint16_t getHeightInBytes(void);
+
+/**
+ * Resets the display and initializes it.
+ */
+void initDisplay(void);
+
+/**
+ * Sets the RAM address pointer to the starting position.
+ */
+void resetAddressCounter(void);
+
+/**
+ * Appends the given 8 pixels (0 = Black, 1 = White) to display RAM.
+ * @param data
+ */
+void imageWrite(uint8_t data);
+
+/**
+ * Updates the display and puts it in deep sleep mode.
+ */
+void updateDisplay(void);
 
 #endif /* EINK_H */
 

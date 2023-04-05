@@ -53,19 +53,20 @@ static void dcHigh(void) {
     PORT_SRDI |= (1 << PIN_DC);
 }
 
+/**
+ * Waits until the display is no longer busy.
+ */
 static void waitBusy(void) {
     loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
 }
 
-static void ledOn(void) {
-    PORT_LED |= (1 << PIN_LED);
+uint16_t getHeightInBytes(void) {
+    uint16_t height = DISPLAY_HEIGHT + 8 - DISPLAY_HEIGHT % 8;
+    
+    return height >> 3;
 }
 
-static void ledOff(void) {
-    PORT_LED &= ~(1 << PIN_LED);
-}
-
-static void initDisplay(void) {
+void initDisplay(void) {
     // 1. Power On
     // VCI already supplied - could supply by MCU output pin?
     // - Supply VCI
@@ -112,15 +113,12 @@ static void initDisplay(void) {
     transmit(0x03); // A[2:0] = 011 [POR]
     csHigh();
     
-    // i.e. 128 bits but only 122 pixel = 6 pixel cut off
-    uint8_t height = DISPLAY_HEIGHT + 8 - DISPLAY_HEIGHT % 8;
-    
     dcLow();
     csLow();
     transmit(RAM_X_ADDRESS_POSITION);
     dcHigh();
     transmit(0x00 + RAM_X_OFFSET);
-    transmit(height / 8 - 1 + RAM_X_OFFSET);
+    transmit(getHeightInBytes() - 1 + RAM_X_OFFSET);
     csHigh();
     
     dcLow();
@@ -158,10 +156,9 @@ static void initDisplay(void) {
     waitBusy();
 }
 
-/**
- * Sets the RAM address pointer to the starting position.
- */
-static void resetRAMAddressCounter(void) {
+void resetAddressCounter(void) {
+    // 5. Write Image and Drive Display Panel
+    // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
     dcLow();
     csLow();
     transmit(RAM_X_ADDRESS_COUNTER);
@@ -178,32 +175,20 @@ static void resetRAMAddressCounter(void) {
     csHigh();
 }
 
-/**
- * Writes the given pixels to the RAM area used by the display
- * and resets the address pointer to the starting position.
- * @param data
- */
-static void setRAM(uint8_t data) {
-    resetRAMAddressCounter();
-    
-    uint8_t height = DISPLAY_HEIGHT + 8 - DISPLAY_HEIGHT % 8;
-    uint16_t bytes = DISPLAY_WIDTH * height / 8;
+void imageWrite(uint8_t data) {
+    // 5. Write Image and Drive Display Panel
+    // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
     dcLow();
     csLow();
     transmit(WRITE_RAM_BW);
     dcHigh();
-    for (uint16_t i = 0; i < bytes; i++) {
-        transmit(data);
-    }
+    transmit(data);
     csHigh();
     
-    resetRAMAddressCounter();
+    // printString("done writing data to RAM\r\n");    
 }
 
-/**
- * Updates the display and puts it in deep sleep mode.
- */
-static void updateDisplay(void) {
+void updateDisplay(void) {
     // - Set softstart setting by Command 0x0C
     dcLow();
     csLow();
@@ -248,38 +233,4 @@ static void updateDisplay(void) {
     
     // - Power OFF
     // see 1. Power On
-}
-
-/**
- * Initializes the display, blanks the RAM, writes the image to RAM
- * and updates the display.
- */
-void writeImage(void) {
-    printString("starting to drive display...\r\n");
-
-    ledOn();
-    initDisplay();
-    setRAM(255);
-    
-    // 5. Write Image and Drive Display Panel
-    // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
-    dcLow();
-    csLow();
-    transmit(WRITE_RAM_BW);
-    dcHigh();
-    // draw a grid
-    for (int j = 0; j < 31; j++) {
-        for (int i = 0; i < 16; i++) {
-            transmit(0);
-        }
-        for (int i = 0; i < 112; i++) {
-            transmit(127);
-        }
-    }       
-    csHigh();
-    
-    printString("done writing data to RAM\r\n");
-    
-    updateDisplay();
-    ledOff();
 }

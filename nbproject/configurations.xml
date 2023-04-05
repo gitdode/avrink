@@ -5,6 +5,7 @@
       <in>avrink.c</in>
       <in>eink.c</in>
       <in>eink.h</in>
+      <in>emoji.h</in>
       <in>pins.h</in>
       <in>spi.c</in>
       <in>spi.h</in>
@@ -65,6 +66,8 @@
       <item path="eink.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="eink.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="emoji.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pins.h" ex="false" tool="3" flavor2="0">
       </item>

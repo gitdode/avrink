@@ -27,6 +27,8 @@
 #include "sram.h"
 #include "eink.h"
 
+#include "emoji.h"
+
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
 
@@ -93,21 +95,100 @@ static void initTimer(void) {
     TIMSK0 |= (1 << OCIE0A);
 }
 
+/**
+ * Turns the LED on.
+ */
+static void ledOn(void) {
+    PORT_LED |= (1 << PIN_LED);
+}
+
+/**
+ * Turns the LED off.
+ */
+static void ledOff(void) {
+    PORT_LED &= ~(1 << PIN_LED);
+}
+
+/**
+ * Just testing.
+ */
 static void sramFun(void) {
     uint8_t status = sramReadStatus();
     printByte(status);
 
     char *easter = "hello easter bunny!";
     size_t written = sramWriteString(0x123, easter);
-    printUint(written);
 
-    size_t length = 19;
-    char bunny[length + 1]; // add 1 for null terminator
+    char bunny[written + 1]; // add one for null terminator
     sramReadString(0x123, bunny, sizeof(bunny));
     
     char buf[strlen(bunny) + 3];
     snprintf(buf, sizeof(buf), "%s\r\n", bunny);
     printString(buf);
+}
+
+/**
+ * Copy image data from SRAM to display.
+ */
+static void sramToDisplay(void) {
+    uint16_t heightInBytes = getHeightInBytes();
+    uint16_t bytes = DISPLAY_WIDTH * heightInBytes;
+    
+    // rotate origin from upper right to upper left and write bytes row by row
+    uint16_t address = 0;
+    int16_t column = DISPLAY_WIDTH;
+    for (uint16_t i = 0; i < bytes; i++) {
+        if (i % heightInBytes == 0) {
+            column--;
+            address = column;
+        }
+        uint8_t byte = sramRead(address);
+        imageWrite(byte);
+        address += DISPLAY_WIDTH;
+    }
+    
+    printString("done copying from SRAM to display\r\n");
+}
+
+/**
+ * Draw a real handcrafted emoji into SRAM.
+ */
+static void writeEmoji(void) {
+    // somewhere near the center of the display
+    sramWrite(1600, EMOJI00);
+    sramWrite(1601, EMOJI01);
+    sramWrite(1602, EMOJI02);
+    sramWrite(1603, EMOJI03);
+    sramWrite(1604, EMOJI04);
+    sramWrite(1605, EMOJI05);
+    sramWrite(1606, EMOJI06);
+    sramWrite(1607, EMOJI07);
+    sramWrite(1608, EMOJI08);
+    sramWrite(1609, EMOJI09);
+    sramWrite(1610, EMOJI0a);
+    sramWrite(1611, EMOJI0b);
+    sramWrite(1612, EMOJI0c);
+    sramWrite(1613, EMOJI0d);
+    sramWrite(1614, EMOJI0e);
+    sramWrite(1615, EMOJI0f);
+    // jump to next line
+    sramWrite(1850, EMOJI10);
+    sramWrite(1851, EMOJI11);
+    sramWrite(1852, EMOJI12);
+    sramWrite(1853, EMOJI13);
+    sramWrite(1854, EMOJI14);
+    sramWrite(1855, EMOJI15);
+    sramWrite(1856, EMOJI16);
+    sramWrite(1857, EMOJI17);
+    sramWrite(1858, EMOJI18);
+    sramWrite(1859, EMOJI19);
+    sramWrite(1860, EMOJI1a);
+    sramWrite(1861, EMOJI1b);
+    sramWrite(1862, EMOJI1c);
+    sramWrite(1863, EMOJI1d);
+    sramWrite(1864, EMOJI1e);
+    sramWrite(1865, EMOJI1f);
+    
 }
 
 int main(void) {
@@ -126,7 +207,23 @@ int main(void) {
 
         if (!once) {
             sramFun();
-            writeImage();
+                        
+            // prepare image in SRAM
+            // blank the image
+            uint16_t bytes = DISPLAY_WIDTH * getHeightInBytes();
+            for (int i = 0; i < bytes; i++) {
+                sramWrite(i, 255);
+            }
+            // write emoji :)
+            writeEmoji();
+                        
+            ledOn();
+            initDisplay();
+            resetAddressCounter();
+            sramToDisplay();
+            updateDisplay();
+            ledOff();
+            
             once = true;
         }
 
