@@ -26,6 +26,7 @@
 #include "spi.h"
 #include "sram.h"
 #include "eink.h"
+#include "font.h"
 
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
@@ -134,7 +135,7 @@ static void sramToDisplay(void) {
     
     // rotate origin from upper right to upper left and write bytes row by row
     uint16_t address = 0;
-    int16_t column = DISPLAY_WIDTH;
+    uint16_t column = DISPLAY_WIDTH;
     for (uint16_t i = 0; i < bytes; i++) {
         if (i % heightInBytes == 0) {
             column--;
@@ -149,44 +150,23 @@ static void sramToDisplay(void) {
 }
 
 /**
- * Draw a real handcrafted emoji into SRAM.
+ * Writes the character with the given pseudo UTF-8 code point to the given
+ * SRAM address.
+ * @param origin
+ * @param code
  */
-static void writeEmoji(void) {
-    // somewhere near the center of the display
-    sramWrite(1600, 0b11111111);
-    sramWrite(1601, 0b11111111);
-    sramWrite(1602, 0b11111111);
-    sramWrite(1603, 0b11111111);
-    sramWrite(1604, 0b11100111);
-    sramWrite(1605, 0b11100111);
-    sramWrite(1606, 0b11111111);
-    sramWrite(1607, 0b11111111);
-    sramWrite(1608, 0b11111111);
-    sramWrite(1609, 0b11111111);
-    sramWrite(1610, 0b11100111);
-    sramWrite(1611, 0b11100111);
-    sramWrite(1612, 0b11111111);
-    sramWrite(1613, 0b11111111);
-    sramWrite(1614, 0b11111111);
-    sramWrite(1615, 0b11111111);
-    // jump to next line
-    sramWrite(1850, 0b11111111);
-    sramWrite(1851, 0b11111111);
-    sramWrite(1852, 0b10011111);
-    sramWrite(1853, 0b10000111);
-    sramWrite(1854, 0b11100111);
-    sramWrite(1855, 0b11110011);
-    sramWrite(1856, 0b11110011);
-    sramWrite(1857, 0b11110011);
-    sramWrite(1858, 0b11110011);
-    sramWrite(1859, 0b11110011);
-    sramWrite(1860, 0b11110011);
-    sramWrite(1861, 0b11100111);
-    sramWrite(1862, 0b10000111);
-    sramWrite(1863, 0b10011111);
-    sramWrite(1864, 0b11111111);
-    sramWrite(1865, 0b11111111);
-    
+static void writeChar(uint16_t origin, uint16_t code) {
+    Character character = getCharacter(code);
+    uint8_t size = character.width * 2;
+    for (uint8_t i = 0; i < size; i++) {
+        if (i == character.width) {
+            // next line
+            origin += DISPLAY_WIDTH - character.width;
+        }
+        uint16_t address = origin + i;
+        char byte = pgm_read_byte(&(character.bytes[i]));
+        sramWrite(address, byte);
+    }
 }
 
 int main(void) {
@@ -212,8 +192,9 @@ int main(void) {
             for (int i = 0; i < bytes; i++) {
                 sramWrite(i, 255);
             }
-            // write emoji :)
-            writeEmoji();
+            
+            // draw an emoji somewhere near the center of the display
+            writeChar(1610, EMOJI_HAPPY);
                         
             ledOn();
             initDisplay();

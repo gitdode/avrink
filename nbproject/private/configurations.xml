@@ -5,6 +5,8 @@
       <in>avrink.c</in>
       <in>eink.c</in>
       <in>eink.h</in>
+      <in>font.c</in>
+      <in>font.h</in>
       <in>pins.h</in>
       <in>spi.c</in>
       <in>spi.h</in>

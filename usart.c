@@ -76,7 +76,7 @@ void printUint(uint8_t data) {
 
 void printByte(uint8_t byte) {
     char string[] = {'0', 'x', '?', '?', '?', '?', '?', '?', '?', '?', '\r', '\n', '\0'};
-    for (int i = 7; i >= 0; i--) {
+    for (uint8_t i = 8; i-- > 0; ) {
         string[9 - i] = byte & (1 << i) ? '1' : '0';
     }
     printString(string);

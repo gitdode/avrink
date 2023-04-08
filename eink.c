@@ -1,5 +1,5 @@
 /* 
- * File:   eink.h
+ * File:   eink.c
  * Author: torsten.roemer@luniks.net
  * Thanks to https://github.com/adafruit/Adafruit_EPD for helping me out!
  *

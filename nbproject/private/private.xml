@@ -12,7 +12,11 @@
         <group name="My projects">
             <file>file:/home/dode/dev/avrink/README.md</file>
             <file>file:/home/dode/dev/avrink/avrink.c</file>
+            <file>file:/home/dode/dev/avrink/eink.c</file>
             <file>file:/home/dode/dev/avrink/Makefile</file>
+            <file>file:/home/dode/dev/avrink/sram.h</file>
+            <file>file:/home/dode/dev/avrink/usart.c</file>
+            <file>file:/home/dode/dev/avrink/sram.c</file>
         </group>
     </open-files>
 </project-private>
