@@ -6,9 +6,10 @@ with an AVR MCU and avr-libc.
 
 Currently implemented:
 
+* Store font pixmaps in program memory instead of RAM
 * Use SRAM as frame buffer
 * Display initialization
-* Draw something like a handcrafted emoji :)
+* Draw the single character the font has to offer for now :)
 
 <img src="https://luniks.net/other/AVRInk-03.jpg" height="405"/>
 
