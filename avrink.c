@@ -151,21 +151,46 @@ static void sramToDisplay(void) {
 
 /**
  * Writes the character with the given pseudo UTF-8 code point to the given
- * SRAM address.
- * @param origin
+ * row and column.
+ * @param row (8 pixels)
+ * @param column (1 pixel)
  * @param code
  */
-static void writeChar(uint16_t origin, uint16_t code) {
+static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
+    uint16_t origin = row * DISPLAY_WIDTH + column;
     Character character = getCharacter(code);
-    uint8_t size = character.width * 2;
-    for (uint8_t i = 0; i < size; i++) {
-        if (i == character.width) {
+    for (uint8_t i = 0; i < FONT_SIZE; i++) {
+        if (i == FONT_WIDTH) {
             // next line
-            origin += DISPLAY_WIDTH - character.width;
+            origin += DISPLAY_WIDTH - FONT_WIDTH;
         }
         uint16_t address = origin + i;
-        char byte = pgm_read_byte(&(character.bytes[i]));
+        char byte = pgm_read_byte(&character.bytes[i]);
         sramWrite(address, byte);
+    }
+}
+
+/**
+ * Writes the given string to the given row and column.
+ * @param row (8 pixels)
+ * @param column (1 pixel)
+ * @param string
+ */
+static void writeString(uint8_t row, uint16_t column, char *string) {
+    uint8_t offset = 0;
+    for (; *string != '\0'; string++) {
+        uint8_t c = (uint8_t)*string;
+        if (c == 194) {
+            // multibyte
+        } else if (c == 195) {
+            // multibyte, add 64 to get code point
+            offset = 64;
+        } else {
+            uint16_t code = c + offset;
+            writeChar(row, column, code);
+            column += FONT_WIDTH;
+            offset = 0;
+        }
     }
 }
 
@@ -193,8 +218,7 @@ int main(void) {
                 sramWrite(i, 255);
             }
             
-            // draw an emoji somewhere near the center of the display
-            writeChar(1610, EMOJI_HAPPY);
+            writeString(7, 100, "D \a");
                         
             ledOn();
             initDisplay();
