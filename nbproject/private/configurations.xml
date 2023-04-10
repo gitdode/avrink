@@ -5,13 +5,13 @@
       <in>avrink.c</in>
       <in>eink.c</in>
       <in>eink.h</in>
-      <in>font.c</in>
       <in>font.h</in>
       <in>pins.h</in>
       <in>spi.c</in>
       <in>spi.h</in>
       <in>sram.c</in>
       <in>sram.h</in>
+      <in>unifont.c</in>
       <in>usart.c</in>
       <in>usart.h</in>
     </df>

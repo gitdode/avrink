@@ -26,7 +26,7 @@
 #include "spi.h"
 #include "sram.h"
 #include "eink.h"
-#include "font.h"
+#include "unifont.h"
 
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
@@ -119,20 +119,21 @@ static void sramFun(void) {
     size_t written = sramWriteString(0x123, easter);
 
     char bunny[written + 1]; // add one for null terminator
-    sramReadString(0x123, bunny, sizeof(bunny));
-    
+    sramReadString(0x123, bunny, sizeof (bunny));
+
     char buf[strlen(bunny) + 3];
-    snprintf(buf, sizeof(buf), "%s\r\n", bunny);
+    snprintf(buf, sizeof (buf), "%s\r\n", bunny);
     printString(buf);
 }
 
 /**
  * Copy image data from SRAM to display.
+ * TODO read from SRAM in sequential mode and write to display
  */
 static void sramToDisplay(void) {
     uint16_t heightInBytes = getHeightInBytes();
     uint16_t bytes = DISPLAY_WIDTH * heightInBytes;
-    
+
     // rotate origin from upper right to upper left and write bytes row by row
     uint16_t address = 0;
     uint16_t column = DISPLAY_WIDTH;
@@ -142,16 +143,16 @@ static void sramToDisplay(void) {
             address = column;
         }
         uint8_t byte = sramRead(address);
-        imageWrite(byte);
+        imageWrite(~byte);
         address += DISPLAY_WIDTH;
     }
-    
+
     printString("done copying from SRAM to display\r\n");
 }
 
 /**
  * Writes the character with the given pseudo UTF-8 code point to the given
- * row and column.
+ * row and column and rotates it 90° clockwise.
  * @param row (8 pixels)
  * @param column (1 pixel)
  * @param code
@@ -159,14 +160,25 @@ static void sramToDisplay(void) {
 static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
     uint16_t origin = row * DISPLAY_WIDTH + column;
     Character character = getCharacter(code);
+    
+    uint8_t rotated[FONT_SIZE];
+    memset(rotated, 0, sizeof (rotated));
+    for (uint8_t i = 0; i < FONT_SIZE; i++) {
+        char byte = pgm_read_byte(&character.bytes[i]);
+        uint8_t j = i / 8 * 8;
+        for (uint8_t r = 0; r < 8; r++) {
+            uint8_t bit = (byte & (1 << (7 - r))) ? 1 : 0;
+            rotated[r + j] |= bit << (7 - i + j);
+        }
+    }
+    
     for (uint8_t i = 0; i < FONT_SIZE; i++) {
         if (i == FONT_WIDTH) {
             // next line
             origin += DISPLAY_WIDTH - FONT_WIDTH;
         }
         uint16_t address = origin + i;
-        char byte = pgm_read_byte(&character.bytes[i]);
-        sramWrite(address, byte);
+        sramWrite(address, rotated[i]);
     }
 }
 
@@ -210,23 +222,28 @@ int main(void) {
 
         if (!once) {
             sramFun();
-                        
+
             // prepare image in SRAM
             // blank the image
             uint16_t bytes = DISPLAY_WIDTH * getHeightInBytes();
             for (int i = 0; i < bytes; i++) {
-                sramWrite(i, 255);
+                sramWrite(i, 0);
             }
-            
-            writeString(7, 100, "D \a");
-                        
+
+            writeString( 0, 0, "Hello GNU Unifont! \a");
+            writeString( 2, 0, "!\"#$%&'()*+,-./0123456789");
+            writeString( 4, 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            writeString( 6, 0, ":;<=>?@[\\]^_`{|}~");
+            writeString( 8, 0, "abcdefghijklmnopqrstuvwxyz");
+            writeString(10, 0, "äöü");
+
             ledOn();
             initDisplay();
             resetAddressCounter();
             sramToDisplay();
             updateDisplay();
             ledOff();
-            
+
             once = true;
         }
 

@@ -1,6 +1,7 @@
 /* 
- * File:   font.h
+ * File:   unifont.h
  * Author: torsten.roemer@luniks.net
+ * Unifont is part of the GNU Project: http://savannah.gnu.org/projects/unifont/
  *
  * Created on 8. April 2023, 16:50
  */
@@ -8,7 +9,7 @@
 #ifndef FONT_H
 #define FONT_H
 
-#define FONT_WIDTH 14
+#define FONT_WIDTH 8
 #define FONT_HEIGHT 16
 #define FONT_SIZE FONT_WIDTH * FONT_HEIGHT / 8
 

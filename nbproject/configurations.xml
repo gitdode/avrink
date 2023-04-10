@@ -5,13 +5,13 @@
       <in>avrink.c</in>
       <in>eink.c</in>
       <in>eink.h</in>
-      <in>font.c</in>
       <in>font.h</in>
       <in>pins.h</in>
       <in>spi.c</in>
       <in>spi.h</in>
       <in>sram.c</in>
       <in>sram.h</in>
+      <in>unifont.c</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -68,6 +68,8 @@
       </item>
       <item path="/home/dode/dev/avrink/eink.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="/home/dode/dev/avrink/font.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="/home/dode/dev/avrink/pins.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="/home/dode/dev/avrink/spi.c" ex="false" tool="0" flavor2="0">
@@ -78,9 +80,7 @@
       </item>
       <item path="/home/dode/dev/avrink/sram.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="font.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="font.h" ex="false" tool="3" flavor2="0">
+      <item path="/home/dode/dev/avrink/unifont.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>
