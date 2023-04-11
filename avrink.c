@@ -159,12 +159,12 @@ static void sramToDisplay(void) {
  */
 static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
     uint16_t origin = row * DISPLAY_WIDTH + column;
-    Character character = getCharacter(code);
+    const uint8_t *bytes = getBitmap(code);
     
     uint8_t rotated[FONT_SIZE];
     memset(rotated, 0, sizeof (rotated));
     for (uint8_t i = 0; i < FONT_SIZE; i++) {
-        char byte = pgm_read_byte(&character.bytes[i]);
+        char byte = pgm_read_byte(&bytes[i]);
         uint8_t j = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
             uint8_t bit = (byte & (1 << (7 - r))) ? 1 : 0;

@@ -14,21 +14,21 @@
 #define FONT_SIZE FONT_WIDTH * FONT_HEIGHT / 8
 
 /**
- * A character with its pseudo UTF-8 code point and pixmap.
+ * A character with its pseudo UTF-8 code point and bitmap.
  */
-typedef struct {
-    uint16_t code;
-    PGM_P bytes;
+typedef struct PROGMEM {
+    const uint16_t code;
+    const uint8_t *bitmap;
 } Character;
 
 /**
- * Gets the character at the given pseudo UTF-8 code point, i.e. 0x00f6 for 
- * U+00F6. If there is no character for that code point, a happy emoji is 
- * returned.
+ * Returns the bitmap of the character at the given pseudo UTF-8 code point, 
+ * i.e. 0x00f6 for U+00F6. If there is no character for that code point, 
+ * a question mark is returned.
  * @param code
- * @return character
+ * @return bitmap
  */
-Character getCharacter(uint16_t code);
+const uint8_t * getBitmap(uint16_t code);
 
 #endif /* FONT_H */
 
