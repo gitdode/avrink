@@ -9,31 +9,16 @@
 #include <stdio.h>
 #include <string.h>
 #include "sram.h"
-#include "pins.h"
 #include "spi.h"
 #include "usart.h"
 
-/**
- * Selects the SRAM to talk to via SPI.
- */
-static void csLow(void) {
-    PORT_SRDI &= ~(1 << PIN_SRCS);
-}
-
-/**
- * Deselects the SRAM to talk to via SPI.
- */
-static void csHigh(void) {
-    PORT_SRDI |= (1 << PIN_SRCS);
-}
-
 void sramWrite(uint16_t address, uint8_t data) {
-    csLow();
+    sramSel();
     transmit(SRAM_WRITE);
     transmit(address >> 8);
     transmit(address);
     transmit(data);
-    csHigh();
+    sramDes();
 }
 
 size_t sramWriteString(uint16_t startAddress, char *data) {
@@ -53,12 +38,12 @@ size_t sramWriteString(uint16_t startAddress, char *data) {
 }
 
 uint8_t sramRead(uint16_t address) {
-    csLow();
+    sramSel();
     transmit(SRAM_READ);
     transmit(address >> 8);
     transmit(address);
     uint8_t read = transmit(0);
-    csHigh();
+    sramDes();
 
     return read;
 }
@@ -74,11 +59,18 @@ void sramReadString(uint16_t startAddress, char *buf, size_t length) {
     buf[length - 1] = '\0';
 }
 
+void sramWriteStatus(uint8_t status) {
+    sramSel();
+    transmit(SRAM_WRSR);
+    transmit(status);
+    sramDes();
+}
+
 uint8_t sramReadStatus(void) {
-    csLow();
+    sramSel();
     transmit(SRAM_RDSR);
     uint8_t status = transmit(0);
-    csHigh();
+    sramDes();
 
     return status;
 }

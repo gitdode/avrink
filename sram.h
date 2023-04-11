@@ -8,12 +8,15 @@
 #ifndef SRAM_H
 #define SRAM_H
 
-#define SRAM_READ  0x3
-#define SRAM_WRITE 0x2
-#define SRAM_RDSR  0x5
-#define SRAM_WRSR  0x1
+#define SRAM_READ   0x3
+#define SRAM_WRITE  0x2
+#define SRAM_RDSR   0x5
+#define SRAM_WRSR   0x1
 
-#define SRAM_HIGH  0x1fff
+#define MODE_SEQU   6
+#define MODE_PAGE   7
+
+#define SRAM_HIGH   0x1fff
 
 /**
  * Writes the given byte to the given address.
@@ -48,6 +51,12 @@ uint8_t sramRead(uint16_t address);
  * @param length
  */
 void sramReadString(uint16_t startAddress, char *string, size_t length);
+
+/**
+ * Writes the given status.
+ * @param status
+ */
+void sramWriteStatus(uint8_t status);
 
 /**
  * Reads the status and returns it.

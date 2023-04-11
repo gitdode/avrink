@@ -29,6 +29,16 @@
 #define RAM_X_OFFSET    1
 
 /**
+ * Send a command to the display.
+ */
+void displayCmd(void);
+
+/**
+ * Send data to the display.
+ */
+void displayData(void);
+
+/**
  * Returns the height in bytes.
  * @return bytes
  */

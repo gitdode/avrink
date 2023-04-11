@@ -128,7 +128,8 @@ static void sramFun(void) {
 
 /**
  * Copy image data from SRAM to display.
- * TODO read from SRAM in sequential mode and write to display
+ * TODO writing to the display while reading from SRAM in sequential mode would
+ * be much more efficient but does not allow to rotate - so this is for later
  */
 static void sramToDisplay(void) {
     uint16_t heightInBytes = getHeightInBytes();
@@ -164,7 +165,7 @@ static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
     uint8_t rotated[FONT_SIZE];
     memset(rotated, 0, sizeof (rotated));
     for (uint8_t i = 0; i < FONT_SIZE; i++) {
-        char byte = pgm_read_byte(&bytes[i]);
+        uint8_t byte = pgm_read_byte(&bytes[i]);
         uint8_t j = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
             uint8_t bit = (byte & (1 << (7 - r))) ? 1 : 0;
