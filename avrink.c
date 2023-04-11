@@ -234,9 +234,10 @@ int main(void) {
             writeString( 0, 0, "Hello GNU Unifont! \a");
             writeString( 2, 0, "!\"#$%&'()*+,-./0123456789");
             writeString( 4, 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            writeString( 6, 0, ":;<=>?@[\\]^_`{|}~");
+            writeString( 6, 0, ":;<=>?@[\\]^_`{|}~¿×÷");
             writeString( 8, 0, "abcdefghijklmnopqrstuvwxyz");
-            writeString(10, 0, "äöü");
+            writeString(10, 0, "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß");
+            writeString(12, 0, "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ");
 
             ledOn();
             initDisplay();
