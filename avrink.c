@@ -144,6 +144,7 @@ static void sramToDisplay(void) {
             address = column;
         }
         uint8_t byte = sramRead(address);
+        // remove negation for dark mode :)
         imageWrite(~byte);
         address += DISPLAY_WIDTH;
     }

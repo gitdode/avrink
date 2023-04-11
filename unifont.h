@@ -16,7 +16,7 @@
 /**
  * A character with its pseudo UTF-8 code point and bitmap.
  */
-typedef struct PROGMEM {
+typedef struct {
     const uint16_t code;
     const uint8_t *bitmap;
 } Character;
