@@ -153,8 +153,22 @@ static void sramToDisplay(void) {
 }
 
 /**
+ * Fills the frame (SRAM) with the given byte, i.e. 0x00 for all white
+ * and 0xff for all black.
+ * @param byte
+ */
+static void setFrame(uint8_t byte) {
+    uint16_t bytes = DISPLAY_WIDTH * getHeightInBytes();
+    for (int i = 0; i < bytes; i++) {
+        sramWrite(i, byte);
+    }
+}
+
+/**
  * Writes the character with the given pseudo UTF-8 code point to the given
  * row and column and rotates it 90° clockwise.
+ * TODO doesn't work for bitmaps wider than 1 byte + make reusable?
+ * Rethink the whole rotating stuff
  * @param row (8 pixels)
  * @param column (1 pixel)
  * @param code
@@ -162,7 +176,7 @@ static void sramToDisplay(void) {
 static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
     uint16_t origin = row * DISPLAY_WIDTH + column;
     const uint8_t *bytes = getBitmap(code);
-    
+
     uint8_t rotated[FONT_SIZE];
     memset(rotated, 0, sizeof (rotated));
     for (uint8_t i = 0; i < FONT_SIZE; i++) {
@@ -173,7 +187,7 @@ static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
             rotated[r + j] |= bit << (7 - i + j);
         }
     }
-    
+
     for (uint8_t i = 0; i < FONT_SIZE; i++) {
         if (i == FONT_WIDTH) {
             // next line
@@ -193,7 +207,7 @@ static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
 static void writeString(uint8_t row, uint16_t column, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
-        uint8_t c = (uint8_t)*string;
+        uint8_t c = (uint8_t) * string;
         if (c == 194) {
             // multibyte
         } else if (c == 195) {
@@ -206,6 +220,19 @@ static void writeString(uint8_t row, uint16_t column, char *string) {
             offset = 0;
         }
     }
+}
+
+static void unifontDemo(void) {
+    // prepare image in SRAM
+    setFrame(0x00);
+
+    writeString(0,  0, "Hello GNU Unifont! \a");
+    writeString(2,  0, "!\"#$%&'()*+,-./0123456789");
+    writeString(4,  0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    writeString(6,  0, ":;<=>?@[\\]^_`{|}~¿×÷");
+    writeString(8,  0, "abcdefghijklmnopqrstuvwxyz");
+    writeString(10, 0, "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß");
+    writeString(12, 0, "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ");
 }
 
 int main(void) {
@@ -224,21 +251,7 @@ int main(void) {
 
         if (!once) {
             sramFun();
-
-            // prepare image in SRAM
-            // blank the image
-            uint16_t bytes = DISPLAY_WIDTH * getHeightInBytes();
-            for (int i = 0; i < bytes; i++) {
-                sramWrite(i, 0);
-            }
-
-            writeString( 0, 0, "Hello GNU Unifont! \a");
-            writeString( 2, 0, "!\"#$%&'()*+,-./0123456789");
-            writeString( 4, 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            writeString( 6, 0, ":;<=>?@[\\]^_`{|}~¿×÷");
-            writeString( 8, 0, "abcdefghijklmnopqrstuvwxyz");
-            writeString(10, 0, "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß");
-            writeString(12, 0, "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ");
+            unifontDemo();
 
             ledOn();
             initDisplay();

@@ -1,5 +1,4 @@
-/Debug/
-/Release/
+/nbproject/private/
 /avrink.elf
 /avrink.hex
 /avrink.lst

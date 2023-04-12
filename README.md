@@ -6,7 +6,7 @@ with an AVR MCU (ATmega328P) and avr-libc.
 
 Currently implemented:
 
-* Nearly complete (no control chars) UTF-8 set of GNU Unifont
+* Nearly complete UTF-8 set of GNU Unifont
 * Store font code points and pixmaps in program memory instead of RAM
 * Use SRAM as frame buffer
 * Display initialization
