@@ -6,6 +6,7 @@
       <in>eink.c</in>
       <in>eink.h</in>
       <in>pins.h</in>
+      <in>progmem.h</in>
       <in>spi.c</in>
       <in>spi.h</in>
       <in>sram.c</in>
@@ -81,6 +82,8 @@
       <item path="/home/dode/dev/avrink/unifont.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="/home/dode/dev/avrink/unifont.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="progmem.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

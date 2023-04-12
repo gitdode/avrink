@@ -16,6 +16,34 @@
  */
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
 
+static const char demo_line1[] PROGMEM = "Hello GNU Unifont! \a";
+static const char demo_line2[] PROGMEM = "!\"#$%&'()*+,-./0123456789";
+static const char demo_line3[] PROGMEM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static const char demo_line4[] PROGMEM = ":;<=>?@[\\]^_`{|}~¿×÷";
+static const char demo_line5[] PROGMEM = "abcdefghijklmnopqrstuvwxyz";
+static const char demo_line6[] PROGMEM = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß";
+static const char demo_line7[] PROGMEM = "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
+
+/**
+ * Demo text.
+ */
+static PGM_P const demo_text[DEMO_TEXT_SIZE] PROGMEM = {
+    demo_line1,
+    demo_line2,
+    demo_line3,
+    demo_line4,
+    demo_line5,
+    demo_line6,
+    demo_line7
+};
+
+char * getDemoText(uint8_t line) {
+    static char buf[64];
+    strcpy_P(buf, (PGM_P)pgm_read_word(&demo_text[line]));
+    
+    return buf;
+}
+
 const uint8_t SPACE[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};

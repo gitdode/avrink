@@ -168,7 +168,7 @@ static void setFrame(uint8_t byte) {
  * Writes the character with the given pseudo UTF-8 code point to the given
  * row and column and rotates it 90° clockwise.
  * TODO doesn't work for bitmaps wider than 1 byte + make reusable?
- * Rethink the whole rotating stuff
+ * Rethink the whole rotating stuff!
  * @param row (8 pixels)
  * @param column (1 pixel)
  * @param code
@@ -222,17 +222,15 @@ static void writeString(uint8_t row, uint16_t column, char *string) {
     }
 }
 
+/**
+ * Displays a demo for the awesome Unifont.
+ */
 static void unifontDemo(void) {
-    // prepare image in SRAM
     setFrame(0x00);
 
-    writeString(0,  0, "Hello GNU Unifont! \a");
-    writeString(2,  0, "!\"#$%&'()*+,-./0123456789");
-    writeString(4,  0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    writeString(6,  0, ":;<=>?@[\\]^_`{|}~¿×÷");
-    writeString(8,  0, "abcdefghijklmnopqrstuvwxyz");
-    writeString(10, 0, "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß");
-    writeString(12, 0, "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ");
+    for (uint8_t i = 0; i < DEMO_TEXT_SIZE; i++) {
+        writeString(i * 2,  0, getDemoText(i));
+    }
 }
 
 int main(void) {
