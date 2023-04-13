@@ -27,6 +27,7 @@
 #include "sram.h"
 #include "eink.h"
 #include "unifont.h"
+#include "utils.h"
 
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
@@ -128,25 +129,16 @@ static void sramFun(void) {
 
 /**
  * Copy image data from SRAM to display.
- * TODO writing to the display while reading from SRAM in sequential mode would
- * be much more efficient but does not allow to rotate - so this is for later
+ * TODO write to display while reading from SRAM in sequential mode
  */
 static void sramToDisplay(void) {
     uint16_t heightInBytes = getHeightInBytes();
     uint16_t bytes = DISPLAY_WIDTH * heightInBytes;
 
-    // rotate origin from upper right to upper left and write bytes row by row
-    uint16_t address = 0;
-    uint16_t column = DISPLAY_WIDTH;
     for (uint16_t i = 0; i < bytes; i++) {
-        if (i % heightInBytes == 0) {
-            column--;
-            address = column;
-        }
-        uint8_t byte = sramRead(address);
+        uint8_t byte = sramRead(i);
         // remove negation for dark mode :)
         imageWrite(~byte);
-        address += DISPLAY_WIDTH;
     }
 
     printString("done copying from SRAM to display\r\n");
@@ -159,52 +151,70 @@ static void sramToDisplay(void) {
  */
 static void setFrame(uint8_t byte) {
     uint16_t bytes = DISPLAY_WIDTH * getHeightInBytes();
+    
     for (int i = 0; i < bytes; i++) {
         sramWrite(i, byte);
     }
 }
 
 /**
- * Writes the character with the given pseudo UTF-8 code point to the given
- * row and column and rotates it 90° clockwise.
- * TODO doesn't work for bitmaps wider than 1 byte + make reusable?
- * Rethink the whole rotating stuff!
+ * Writes the given bitmap stored in program memory with the given width  
+ * and height to the given row and column.
+ * TODO doesn't work for bitmaps wider than 1 byte
  * @param row (8 pixels)
- * @param column (1 pixel)
- * @param code
+ * @param col (1 pixel)
+ * @param bytes
+ * @param width
+ * @param height
  */
-static void writeChar(uint8_t row, uint16_t column, uint16_t code) {
-    uint16_t origin = row * DISPLAY_WIDTH + column;
-    const uint8_t *bytes = getBitmap(code);
-
-    uint8_t rotated[FONT_SIZE];
-    memset(rotated, 0, sizeof (rotated));
-    for (uint8_t i = 0; i < FONT_SIZE; i++) {
+static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes, 
+        uint16_t width, uint16_t height) {
+    uint16_t size = width * height / 8;
+    uint16_t heightInBytes = getHeightInBytes();
+    uint16_t origin = DISPLAY_WIDTH * heightInBytes + row - col * heightInBytes;
+    
+    uint8_t rotated[size];
+    memset(rotated, 0, ARRAY_LENGTH(rotated));
+    for (uint8_t i = 0; i < size; i++) {
         uint8_t byte = pgm_read_byte(&bytes[i]);
         uint8_t j = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
             uint8_t bit = (byte & (1 << (7 - r))) ? 1 : 0;
             rotated[r + j] |= bit << (7 - i + j);
-        }
+        }        
     }
 
-    for (uint8_t i = 0; i < FONT_SIZE; i++) {
-        if (i == FONT_WIDTH) {
+    uint16_t address = origin;
+    for (uint8_t i = 0; i < size; i++) {
+        if (i == width) {
             // next line
-            origin += DISPLAY_WIDTH - FONT_WIDTH;
+            address = origin + 1;
         }
-        uint16_t address = origin + i;
+        address -= heightInBytes;
         sramWrite(address, rotated[i]);
     }
 }
 
 /**
+ * Writes the character with the given pseudo UTF-8 code point to the given
+ * row and column.
+ * @param row (8 pixels)
+ * @param col (1 pixel)
+ * @param code
+ */
+static void writeChar(uint8_t row, uint16_t col, uint16_t code) {
+    const uint8_t *bytes = getBitmap(code);
+    
+    writeBitmap(row, col, bytes, FONT_WIDTH, FONT_HEIGHT);
+}
+
+/**
  * Writes the given string to the given row and column.
  * @param row (8 pixels)
- * @param column (1 pixel)
+ * @param col (1 pixel)
  * @param string
  */
-static void writeString(uint8_t row, uint16_t column, char *string) {
+static void writeString(uint8_t row, uint16_t col, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
         uint8_t c = (uint8_t) * string;
@@ -215,8 +225,8 @@ static void writeString(uint8_t row, uint16_t column, char *string) {
             offset = 64;
         } else {
             uint16_t code = c + offset;
-            writeChar(row, column, code);
-            column += FONT_WIDTH;
+            writeChar(row, col, code);
+            col += FONT_WIDTH;
             offset = 0;
         }
     }

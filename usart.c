@@ -11,6 +11,7 @@
 #include <avr/interrupt.h>
 #include <util/setbaud.h>
 #include "usart.h"
+#include "utils.h"
 
 static volatile bool usartReceived = false;
 
@@ -48,7 +49,7 @@ void getUSARTData(char* const data, size_t const size) {
     if (size > 0) {
         data[0] = '\0';
         strncat(data, usartData, size - 1);
-        memset(usartData, 0, sizeof (usartData));
+        memset(usartData, 0, ARRAY_LENGTH(usartData));
         usartReceived = false;
     }
 }

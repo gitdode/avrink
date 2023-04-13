@@ -6,13 +6,13 @@
       <in>eink.c</in>
       <in>eink.h</in>
       <in>pins.h</in>
-      <in>progmem.h</in>
       <in>spi.c</in>
       <in>spi.h</in>
       <in>sram.c</in>
       <in>sram.h</in>
       <in>unifont.c</in>
       <in>unifont.h</in>
+      <in>utils.h</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -83,7 +83,7 @@
       </item>
       <item path="/home/dode/dev/avrink/unifont.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="progmem.h" ex="false" tool="3" flavor2="0">
+      <item path="utils.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
