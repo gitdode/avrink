@@ -13,7 +13,7 @@ Currently implemented:
 * Draw lines of text in Unifont
 * Logging via USART
 
-<img src="https://luniks.net/other/AVRInk-05.jpg" height="405"/>
+<img src="https://luniks.net/other/AVRInk-05.jpg" style="max-width: 305px"/>
 
 Thanks to [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD)
 for helping me out!
