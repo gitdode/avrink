@@ -24,8 +24,9 @@
 #define RAM_X_ADDRESS_COUNTER       0x4e
 #define RAM_Y_ADDRESS_COUNTER       0x4f
 
-#define DISPLAY_WIDTH   250UL
+#define DISPLAY_WIDTH   250
 #define DISPLAY_HEIGHT  122
+#define DISPLAY_H_BYTES ((DISPLAY_HEIGHT + 8 - DISPLAY_HEIGHT % 8) >> 3)
 #define RAM_X_OFFSET    1
 
 /**
@@ -37,12 +38,6 @@ void displayCmd(void);
  * Send data to the display.
  */
 void displayData(void);
-
-/**
- * Returns the height in bytes.
- * @return bytes
- */
-uint16_t getHeightInBytes(void);
 
 /**
  * Resets the display and initializes it.

@@ -40,12 +40,6 @@ void displayData(void) {
     PORT_SRDI |= (1 << PIN_DC);
 }
 
-uint16_t getHeightInBytes(void) {
-    uint16_t height = DISPLAY_HEIGHT + 8 - DISPLAY_HEIGHT % 8;
-    
-    return height >> 3;
-}
-
 void initDisplay(void) {
     // 1. Power On
     // VCI already supplied - could supply by MCU output pin?
@@ -98,7 +92,7 @@ void initDisplay(void) {
     transmit(RAM_X_ADDRESS_POSITION);
     displayData();
     transmit(0x00 + RAM_X_OFFSET);
-    transmit(getHeightInBytes() - 1 + RAM_X_OFFSET);
+    transmit(DISPLAY_H_BYTES - 1 + RAM_X_OFFSET);
     displayDes();
     
     displayCmd();

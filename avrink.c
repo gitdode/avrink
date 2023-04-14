@@ -132,8 +132,7 @@ static void sramFun(void) {
  * TODO write to display while reading from SRAM in sequential mode
  */
 static void sramToDisplay(void) {
-    uint16_t heightInBytes = getHeightInBytes();
-    uint16_t bytes = DISPLAY_WIDTH * heightInBytes;
+    uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
 
     for (uint16_t i = 0; i < bytes; i++) {
         uint8_t byte = sramRead(i);
@@ -150,7 +149,7 @@ static void sramToDisplay(void) {
  * @param byte
  */
 static void setFrame(uint8_t byte) {
-    uint16_t bytes = DISPLAY_WIDTH * getHeightInBytes();
+    uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
     
     for (int i = 0; i < bytes; i++) {
         sramWrite(i, byte);
@@ -170,8 +169,7 @@ static void setFrame(uint8_t byte) {
 static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes, 
         uint16_t width, uint16_t height) {
     uint16_t size = width * height / 8;
-    uint16_t heightInBytes = getHeightInBytes();
-    uint16_t origin = DISPLAY_WIDTH * heightInBytes + row - col * heightInBytes;
+    uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
     
     uint8_t rotated[size];
     memset(rotated, 0, ARRAY_LENGTH(rotated));
@@ -190,7 +188,7 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
             // next line
             address = origin + 1;
         }
-        address -= heightInBytes;
+        address -= DISPLAY_H_BYTES;
         sramWrite(address, rotated[i]);
     }
 }
