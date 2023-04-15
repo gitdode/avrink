@@ -173,20 +173,20 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
     
     uint8_t rotated[size];
     memset(rotated, 0, ARRAY_LENGTH(rotated));
-    for (uint8_t i = 0; i < size; i++) {
+    for (uint16_t i = 0; i < size; i++) {
         uint8_t byte = pgm_read_byte(&bytes[i]);
-        uint8_t j = i / 8 * 8;
+        uint16_t j = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
             uint8_t bit = (byte & (1 << (7 - r))) ? 1 : 0;
             rotated[r + j] |= bit << (7 - i + j);
-        }        
+        }
     }
 
     uint16_t address = origin;
-    for (uint8_t i = 0; i < size; i++) {
-        if (i == width) {
+    for (uint16_t i = 0; i < size; i++) {
+        if (i % width == 0) {
             // next line
-            address = origin + 1;
+            address = origin + (i / width);
         }
         address -= DISPLAY_H_BYTES;
         sramWrite(address, rotated[i]);
@@ -257,7 +257,8 @@ int main(void) {
 
         if (!once) {
             sramFun();
-            unifontDemo();
+            // unifontDemo();
+            writeChar(0, 0, 0x00ff);
 
             ledOn();
             initDisplay();
