@@ -860,7 +860,7 @@ Character getCharacter(uint16_t code) {
     size_t length = ARRAY_LENGTH(chars);
     for (size_t i = 0; i < length; i++) {
         if (pgm_read_word(&chars[i].code) == code) {
-            Character character;
+            static Character character;
             memcpy_P(&character, &chars[i], sizeof (Character));
             
             return character;
