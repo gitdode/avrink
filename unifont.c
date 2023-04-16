@@ -9,37 +9,32 @@
 #include <stdio.h>
 #include <avr/pgmspace.h>
 #include "unifont.h"
-#include "usart.h"
+#include "utils.h"
 
-/**
- * Computes the length of the given array.
- */
-#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
-
-static const char demo_line1[] PROGMEM = "Hello GNU Unifont! \a";
-static const char demo_line2[] PROGMEM = "!\"#$%&'()*+,-./0123456789";
-static const char demo_line3[] PROGMEM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-static const char demo_line4[] PROGMEM = ":;<=>?@[\\]^_`{|}~¿×÷";
-static const char demo_line5[] PROGMEM = "abcdefghijklmnopqrstuvwxyz";
-static const char demo_line6[] PROGMEM = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß";
-static const char demo_line7[] PROGMEM = "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
+static const char demoLine1[] PROGMEM = "Hello GNU Unifont! \a";
+static const char demoLine2[] PROGMEM = "!\"#$%&'()*+,-./0123456789";
+static const char demoLine3[] PROGMEM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static const char demoLine4[] PROGMEM = ":;<=>?@[\\]^_`{|}~¿×÷";
+static const char demoLine5[] PROGMEM = "abcdefghijklmnopqrstuvwxyz";
+static const char demoLine6[] PROGMEM = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß";
+static const char demoLine7[] PROGMEM = "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ";
 
 /**
  * Demo text.
  */
-static PGM_P const demo_text[DEMO_TEXT_SIZE] PROGMEM = {
-    demo_line1,
-    demo_line2,
-    demo_line3,
-    demo_line4,
-    demo_line5,
-    demo_line6,
-    demo_line7
+static PGM_P const demoText[DEMO_TEXT_SIZE] PROGMEM = {
+    demoLine1,
+    demoLine2,
+    demoLine3,
+    demoLine4,
+    demoLine5,
+    demoLine6,
+    demoLine7
 };
 
 char * getDemoText(uint8_t line) {
     static char buf[64];
-    strcpy_P(buf, (PGM_P)pgm_read_word(&demo_text[line]));
+    strcpy_P(buf, (PGM_P)pgm_read_word(&demoText[line]));
     
     return buf;
 }
@@ -861,13 +856,13 @@ const Character chars[] PROGMEM = {
     {0x00ff, y_diaeresis}
 };
 
-const uint8_t * getBitmap(uint16_t code) {
+const uint8_t * getUnifontBitmap(uint16_t code) {
     size_t length = ARRAY_LENGTH(chars);
     for (size_t i = 0; i < length; i++) {
         if (pgm_read_word(&chars[i].code) == code) {
             return pgm_read_ptr(&chars[i].bitmap);
         }
     }
-
+    
     return QUESTION_MARK;
 }

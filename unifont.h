@@ -37,7 +37,7 @@ char * getDemoText(uint8_t line);
  * @param code
  * @return bitmap
  */
-const uint8_t * getBitmap(uint16_t code);
+const uint8_t * getUnifontBitmap(uint16_t code);
 
 #endif /* FONT_H */
 

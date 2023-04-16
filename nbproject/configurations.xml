@@ -3,6 +3,8 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="/home/dode/dev/avrink" name="0">
       <in>avrink.c</in>
+      <in>bitmaps.c</in>
+      <in>bitmaps.h</in>
       <in>eink.c</in>
       <in>eink.h</in>
       <in>pins.h</in>
@@ -83,7 +85,11 @@
       </item>
       <item path="/home/dode/dev/avrink/unifont.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="utils.h" ex="false" tool="3" flavor2="0">
+      <item path="/home/dode/dev/avrink/utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="bitmaps.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="bitmaps.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

@@ -7,10 +7,10 @@ with an AVR MCU (ATmega328P) and avr-libc.
 Currently implemented:
 
 * Nearly complete UTF-8 set of GNU Unifont
-* Store font code points and pixmaps in program memory instead of RAM
+* Store font and bitmaps in program memory instead of RAM
 * Use SRAM as frame buffer
-* Display initialization
-* Draw lines of text in Unifont
+* Draw strings in Unifont
+* Draw bitmaps
 * Logging via USART
 
 <img src="https://luniks.net/other/AVRInk-05.jpg"/>

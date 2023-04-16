@@ -27,6 +27,7 @@
 #include "sram.h"
 #include "eink.h"
 #include "unifont.h"
+#include "bitmaps.h"
 #include "utils.h"
 
 /* Timer0 interrupts per second */
@@ -158,8 +159,8 @@ static void setFrame(uint8_t byte) {
 
 /**
  * Writes the given bitmap stored in program memory with the given width  
- * and height to the given row and column.
- * TODO doesn't work for bitmaps wider than 1 byte
+ * and height to the given row and column. Width and height must be multiples
+ * of 8.
  * @param row (8 pixels)
  * @param col (1 pixel)
  * @param bytes
@@ -172,24 +173,34 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
     uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
     
     uint8_t rotated[size];
-    memset(rotated, 0, ARRAY_LENGTH(rotated));
+    memset(rotated, 0, size);
+    uint16_t n = 0;
     for (uint16_t i = 0; i < size; i++) {
-        uint8_t byte = pgm_read_byte(&bytes[i]);
-        uint16_t j = i / 8 * 8;
+        uint8_t next = pgm_read_byte(&bytes[n]);
+        n += width / 8;
+        if ((i + 1) % width == 0 && width > 8) {
+            n = i / width + 1;
+        }
+        
+        uint16_t m = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
-            uint8_t bit = (byte & (1 << (7 - r))) ? 1 : 0;
-            rotated[r + j] |= bit << (7 - i + j);
+            uint8_t bit = (next & (1 << (7 - r))) ? 1 : 0;
+            rotated[r + m] |= bit << (7 - i + m);
         }
     }
-
+    
     uint16_t address = origin;
     for (uint16_t i = 0; i < size; i++) {
-        if (i % width == 0) {
-            // next line
-            address = origin + (i / width);
+        if (i % height == 0) {
+            if (i > 0) {
+                address -= height / 8 - 1;
+            }
+        } else if (i % 8 == 0) {
+            address += 8 * DISPLAY_H_BYTES + 1;
         }
-        address -= DISPLAY_H_BYTES;
+        
         sramWrite(address, rotated[i]);
+        address -= DISPLAY_H_BYTES;
     }
 }
 
@@ -201,7 +212,7 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
  * @param code
  */
 static void writeChar(uint8_t row, uint16_t col, uint16_t code) {
-    const uint8_t *bytes = getBitmap(code);
+    const uint8_t *bytes = getUnifontBitmap(code);
     
     writeBitmap(row, col, bytes, FONT_WIDTH, FONT_HEIGHT);
 }
@@ -234,8 +245,6 @@ static void writeString(uint8_t row, uint16_t col, char *string) {
  * Displays a demo for the awesome Unifont.
  */
 static void unifontDemo(void) {
-    setFrame(0x00);
-
     for (uint8_t i = 0; i < DEMO_TEXT_SIZE; i++) {
         writeString(i * 2,  0, getDemoText(i));
     }
@@ -257,8 +266,10 @@ int main(void) {
 
         if (!once) {
             sramFun();
-            // unifontDemo();
-            writeChar(0, 0, 0x00ff);
+            setFrame(0x00);
+            Bitmap tux = getBitmap(TUX);
+            writeBitmap(1, 194, tux.bitmap, tux.width, tux.height);
+            unifontDemo();
 
             ledOn();
             initDisplay();
