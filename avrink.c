@@ -159,24 +159,25 @@ static void setFrame(uint8_t byte) {
 
 /**
  * Writes the given bitmap stored in program memory with the given width  
- * and height to the given row and column. Width and height must be multiples
- * of 8.
+ * and height to the given row and column to SRAM. Width and height must be 
+ * multiples of 8.
  * @param row (8 pixels)
  * @param col (1 pixel)
- * @param bytes
+ * @param bitmap
  * @param width
  * @param height
  */
-static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes, 
+static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap, 
         uint16_t width, uint16_t height) {
     uint16_t size = width * height / 8;
     uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
     
+    // rotate each 8x8 pixel 90° clockwise and flip horizontally
     uint8_t rotated[size];
     memset(rotated, 0, size);
     uint16_t n = 0;
     for (uint16_t i = 0; i < size; i++) {
-        uint8_t next = pgm_read_byte(&bytes[n]);
+        uint8_t next = pgm_read_byte(&bitmap[n]);
         n += width / 8;
         if ((i + 1) % width == 0 && width > 8) {
             n = i / width + 1;
@@ -189,6 +190,7 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
         }
     }
     
+    // write each byte to its location/address
     uint16_t address = origin;
     for (uint16_t i = 0; i < size; i++) {
         if (i % height == 0) {
@@ -205,6 +207,18 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
 }
 
 /**
+ * Writes the bitmap with the given index to the given row and column.
+ * @param row
+ * @param col
+ * @param index
+ */
+static void writeBitmap(uint8_t row, uint16_t col, uint16_t index) {
+    Bitmap bitmap = getBitmap(index);
+    
+    bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
+}
+
+/**
  * Writes the character with the given pseudo UTF-8 code point to the given
  * row and column.
  * @param row (8 pixels)
@@ -212,9 +226,9 @@ static void writeBitmap(uint8_t row, uint16_t col, const uint8_t *bytes,
  * @param code
  */
 static void writeChar(uint8_t row, uint16_t col, uint16_t code) {
-    const uint8_t *bytes = getUnifontBitmap(code);
+    Character character = getCharacter(code);
     
-    writeBitmap(row, col, bytes, FONT_WIDTH, FONT_HEIGHT);
+    bufferBitmap(row, col, character.bitmap, FONT_WIDTH, FONT_HEIGHT);
 }
 
 /**
@@ -267,8 +281,7 @@ int main(void) {
         if (!once) {
             sramFun();
             setFrame(0x00);
-            Bitmap tux = getBitmap(TUX);
-            writeBitmap(1, 194, tux.bitmap, tux.width, tux.height);
+            writeBitmap(1, 194, TUX);
             unifontDemo();
 
             ledOn();

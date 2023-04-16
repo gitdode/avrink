@@ -856,13 +856,17 @@ const Character chars[] PROGMEM = {
     {0x00ff, y_diaeresis}
 };
 
-const uint8_t * getUnifontBitmap(uint16_t code) {
+Character getCharacter(uint16_t code) {
     size_t length = ARRAY_LENGTH(chars);
     for (size_t i = 0; i < length; i++) {
         if (pgm_read_word(&chars[i].code) == code) {
-            return pgm_read_ptr(&chars[i].bitmap);
+            Character character;
+            memcpy_P(&character, &chars[i], sizeof (Character));
+            
+            return character;
         }
     }
     
-    return QUESTION_MARK;
+    // return question mark if unknown code point
+    return getCharacter(0x003f);
 }

@@ -11,7 +11,7 @@
 #define TUX 0
 
 /**
- * A bitmap with width and height, and data.
+ * A bitmap with its width and height, and data.
  */
 typedef struct {
     const uint16_t width;
@@ -22,7 +22,7 @@ typedef struct {
 /**
  * Returns the bitmap at the given index.
  * @param index
- * @return bitmap
+ * @return Bitmap
  */
 Bitmap getBitmap(uint8_t index);
 

@@ -31,13 +31,13 @@ typedef struct {
 char * getDemoText(uint8_t line);
 
 /**
- * Returns the bitmap of the character at the given pseudo UTF-8 code point, 
- * i.e. 0x00f6 for U+00F6. If there is no character for that code point, 
- * a question mark is returned.
+ * Returns the Character at the given pseudo UTF-8 code point, i.e. 0x00f6 
+ * for U+00F6. If there is no character for that code point, a question mark 
+ * is returned.
  * @param code
- * @return bitmap
+ * @return Character
  */
-const uint8_t * getUnifontBitmap(uint16_t code);
+Character getCharacter(uint16_t code);
 
 #endif /* FONT_H */
 

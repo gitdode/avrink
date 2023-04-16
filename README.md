@@ -13,7 +13,7 @@ Currently implemented:
 * Draw bitmaps
 * Logging via USART
 
-<img src="https://luniks.net/other/AVRInk-05.jpg"/>
+<img src="https://luniks.net/other/AVRInk-06.jpg"/>
 
 Thanks to [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD)
 for helping me out!
