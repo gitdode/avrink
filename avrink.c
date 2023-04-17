@@ -158,6 +158,28 @@ static void setFrame(uint8_t byte) {
 }
 
 /**
+ * Writes the given byte at the given index for the given bitmap height
+ * to its address/location. 
+ * @param index
+ * @param address
+ * @param height
+ * @param byte
+ */
+static void bufferByte(uint16_t index, uint16_t *address, uint16_t height, 
+        uint8_t byte) {
+    if (index % height == 0) {
+        if (index > 0) {
+            *address -= height / 8 - 1;
+        }
+    } else if (index % 8 == 0) {
+        *address += 8 * DISPLAY_H_BYTES + 1;
+    }
+
+    sramWrite(*address, byte);
+    *address -= DISPLAY_H_BYTES;
+}
+
+/**
  * Writes the given bitmap stored in program memory with the given width  
  * and height to the given row and column to SRAM. Width and height must be 
  * multiples of 8.
@@ -172,37 +194,34 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
     uint16_t size = width * height / 8;
     uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
     
-    // rotate each 8x8 pixel 90° clockwise and flip horizontally
-    uint8_t rotated[size];
-    memset(rotated, 0, size);
-    uint16_t n = 0;
+    // rotate each 8 x 8 pixel 90° clockwise and flip horizontally
+    uint8_t rotated[8];
+    memset(rotated, 0, 8);
+    uint16_t n = 0, w = 0;
+    uint16_t address = origin;
     for (uint16_t i = 0; i < size; i++) {
         uint8_t next = pgm_read_byte(&bitmap[n]);
+        // read bytes column by column
         n += width / 8;
         if ((i + 1) % width == 0 && width > 8) {
             n = i / width + 1;
         }
         
+        // rotate 8 x 8 pixel
         uint16_t m = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
             uint8_t bit = (next & (1 << (7 - r))) ? 1 : 0;
-            rotated[r + m] |= bit << (7 - i + m);
+            rotated[r] |= bit << (7 - i + m);
         }
-    }
-    
-    // write each byte to its location/address
-    uint16_t address = origin;
-    for (uint16_t i = 0; i < size; i++) {
-        if (i % height == 0) {
-            if (i > 0) {
-                address -= height / 8 - 1;
+
+        // buffer 8 x 8 rotated pixel
+        if ((i + 1) % 8 == 0) {
+            for (uint8_t r = 0; r < 8; r++) {
+                bufferByte(w, &address, height, rotated[r]);
+                w++;
             }
-        } else if (i % 8 == 0) {
-            address += 8 * DISPLAY_H_BYTES + 1;
+            memset(rotated, 0, 8);
         }
-        
-        sramWrite(address, rotated[i]);
-        address -= DISPLAY_H_BYTES;
     }
 }
 

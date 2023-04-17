@@ -9,6 +9,7 @@
 #define BITMAPS_H
 
 #define TUX 0
+#define LINUS 1
 
 /**
  * A bitmap with its width and height, and data.
