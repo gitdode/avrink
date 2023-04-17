@@ -1,6 +1,6 @@
 # AVRInk
 
-[![CI](https://github.com/gitdode/avrink/actions/workflows/build.yml/badge.svg)](https://github.com/gitdode/avrink/actions/workflows/build.yml)
+[![make](https://github.com/gitdode/avrink/actions/workflows/build.yml/badge.svg)](https://github.com/gitdode/avrink/actions/workflows/build.yml)
 
 Experimental project to drive an E-Ink display like the 
 [Adafruit Monochrome 2.13" 250x122 SSD1680](https://www.adafruit.com/product/4197)
