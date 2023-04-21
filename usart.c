@@ -39,6 +39,9 @@ void initUSART(void) {
 
     UCSR0B = (1 << TXEN0) | (1 << RXEN0);
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+    
+    // enable USART RX complete interrupt 0
+    UCSR0B |= (1 << RXCIE0);
 }
 
 bool isUSARTReceived(void) {
