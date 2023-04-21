@@ -13,6 +13,10 @@
 #define CMD_ROW     "row"
 #define CMD_COL     "col"
 
+/**
+ * Initial attempt to send text via USART to the display.
+ * @param data
+ */
 void handle(char *data);
 
 #endif /* CMD_H */

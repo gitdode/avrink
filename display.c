@@ -31,7 +31,9 @@ static void bufferByte(uint16_t index, uint16_t *address, uint16_t height,
         *address += 8 * DISPLAY_H_BYTES + 1;
     }
 
-    sramWrite(*address, byte);
+    if (!(*address < 0 || *address > DISPLAY_WIDTH * DISPLAY_H_BYTES)) {
+        sramWrite(*address, byte);
+    }
     *address -= DISPLAY_H_BYTES;
 }
 
@@ -59,8 +61,8 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
         uint8_t next = pgm_read_byte(&bitmap[n]);
         // read bytes column by column
         n += width / 8;
-        if ((i + 1) % width == 0 && width > 8) {
-            n = i / width + 1;
+        if ((i + 1) % height == 0) {
+            n = i / height + 1;
         }
         
         // rotate 8 x 8 pixel
@@ -101,19 +103,19 @@ void setFrame(uint8_t byte) {
     }
 }
 
-void writeBitmap(uint8_t row, uint16_t col, uint16_t index) {
+void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     Bitmap bitmap = getBitmap(index);
     
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
-void writeChar(uint8_t row, uint16_t col, uint16_t code) {
+void writeChar(uint16_t row, uint16_t col, uint16_t code) {
     Character character = getCharacter(code);
     
     bufferBitmap(row, col, character.bitmap, FONT_WIDTH, FONT_HEIGHT);
 }
 
-void writeString(uint8_t row, uint16_t col, char *string) {
+void writeString(uint16_t row, uint16_t col, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
         uint8_t c = (uint8_t) * string;

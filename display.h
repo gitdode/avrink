@@ -27,7 +27,7 @@ void setFrame(uint8_t byte);
  * @param col
  * @param index
  */
-void writeBitmap(uint8_t row, uint16_t col, uint16_t index);
+void writeBitmap(uint16_t row, uint16_t col, uint16_t index);
 
 /**
  * Writes the character with the given pseudo UTF-8 code point to the given
@@ -36,7 +36,7 @@ void writeBitmap(uint8_t row, uint16_t col, uint16_t index);
  * @param col (1 pixel)
  * @param code
  */
-void writeChar(uint8_t row, uint16_t col, uint16_t code);
+void writeChar(uint16_t row, uint16_t col, uint16_t code);
 
 /**
  * Writes the given string to the given row and column.
@@ -44,7 +44,7 @@ void writeChar(uint8_t row, uint16_t col, uint16_t code);
  * @param col (1 pixel)
  * @param string
  */
-void writeString(uint8_t row, uint16_t col, char *string);
+void writeString(uint16_t row, uint16_t col, char *string);
 
 /**
  * Displays a demo for the awesome Unifont.
