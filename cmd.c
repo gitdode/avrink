@@ -17,7 +17,7 @@
  * Sets the frame buffer to black (0xff) or white (0x00).
  * @param data
  */
-static void handleClear(char *data) {
+static void clear(char *data) {
     strtok(data, " ");
     char *end;
     uint8_t color = strtol(strtok(NULL, " "), &end, 16);
@@ -29,7 +29,7 @@ static void handleClear(char *data) {
  * Writes one line of text to the given row and column.
  * @param data
  */
-static void handleText(char *data) {
+static void text(char *data) {
     strtok(data, " ");
     char *end;
     uint16_t row = strtol(strtok(NULL, " "), &end, 10);
@@ -43,7 +43,7 @@ static void handleText(char *data) {
  * Writes the bitmap with the given index to the given row and column.
  * @param data
  */
-static void handleBitmap(char *data) {
+static void bitmap(char *data) {
     strtok(data, " ");
     char *end;
     uint16_t row = strtol(strtok(NULL, " "), &end, 10);
@@ -56,7 +56,7 @@ static void handleBitmap(char *data) {
 /**
  * Writes the Unifont demo.
  */
-static void handleDemo(void) {
+static void demo(void) {
     setFrame(0x00);
     writeBitmap(1, 198, TUX);
     unifontDemo();
@@ -66,7 +66,7 @@ static void handleDemo(void) {
 /**
  * Updates the display.
  */
-static void handleUpdate(void) {
+static void update(void) {
     display();
 }
 
@@ -74,10 +74,10 @@ void handleCmd(char *data) {
     printString("\r\n");
     
     switch(*data) {
-        case CMD_CLEAR: handleClear(data); break;
-        case CMD_TEXT: handleText(data); break;
-        case CMD_BITMAP: handleBitmap(data); break;
-        case CMD_DEMO: handleDemo(); break;
-        case CMD_UPDATE: handleUpdate(); break;
+        case CMD_CLEAR:  clear(data); break;
+        case CMD_TEXT:   text(data); break;
+        case CMD_BITMAP: bitmap(data); break;
+        case CMD_DEMO:   demo(); break;
+        case CMD_UPDATE: update(); break;
     }
 }
