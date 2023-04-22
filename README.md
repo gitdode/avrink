@@ -13,6 +13,7 @@ Currently implemented:
 * Use SRAM as frame buffer
 * Draw strings in Unifont
 * Draw bitmaps
+* Clear display, write text and bitmaps and update display via USART
 * Logging via USART
 
 <img src="https://luniks.net/other/AVRInk-06.jpg"/>
