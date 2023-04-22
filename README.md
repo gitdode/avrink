@@ -34,5 +34,3 @@ Write some text and a bitmap:
 `t 6 0 There is also Tux on the`  
 `t 8 0 right. That's about it!`  
 `u` // update display  
-
-<img src="https://luniks.net/other/AVRInk-07.jpg"/>
