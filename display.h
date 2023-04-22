@@ -9,8 +9,7 @@
 #define DISPLAY_H
 
 /**
- * Copy image data from SRAM to display.
- * TODO write to display while reading from SRAM in sequential mode
+ * Copies image data from SRAM to display.
  */
 void sramToDisplay(void);
 
@@ -51,5 +50,10 @@ void writeString(uint16_t row, uint16_t col, char *string);
  */
 void unifontDemo(void);
 
-#endif /* DISPLAY_H */
+/**
+ * Initializes the display, resets the address counter,
+ * copys image data from SRAM to display and updates it.
+ */
+void display(void);
 
+#endif /* DISPLAY_H */

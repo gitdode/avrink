@@ -18,8 +18,5 @@ void handle(char *data) {
     writeBitmap(4, 194, TUX);
     writeString(0, 0, buf);
 
-    initDisplay();
-    resetAddressCounter();
-    sramToDisplay();
-    updateDisplay();
+    display();
 }

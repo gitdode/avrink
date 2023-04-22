@@ -20,4 +20,3 @@
 void handle(char *data);
 
 #endif /* CMD_H */
-

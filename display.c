@@ -21,7 +21,7 @@
  * @param height
  * @param byte
  */
-static void bufferByte(uint16_t index, uint16_t *address, uint16_t height, 
+static void bufferByte(uint16_t index, uint16_t *address, uint16_t height,
         uint8_t byte) {
     if (index % height == 0) {
         if (index > 0) {
@@ -47,11 +47,11 @@ static void bufferByte(uint16_t index, uint16_t *address, uint16_t height,
  * @param width
  * @param height
  */
-static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap, 
+static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
         uint16_t width, uint16_t height) {
     uint16_t size = width * height / 8;
     uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
-    
+
     // rotate each 8 x 8 pixel 90° clockwise and flip horizontally
     uint8_t rotated[8];
     memset(rotated, 0, 8);
@@ -64,7 +64,7 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
         if ((i + 1) % height == 0) {
             n = i / height + 1;
         }
-        
+
         // rotate 8 x 8 pixel
         uint16_t m = i / 8 * 8;
         for (uint8_t r = 0; r < 8; r++) {
@@ -83,6 +83,7 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
     }
 }
 
+// TODO write to display while reading from SRAM in sequential mode
 void sramToDisplay(void) {
     uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
 
@@ -97,7 +98,7 @@ void sramToDisplay(void) {
 
 void setFrame(uint8_t byte) {
     uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
-    
+
     for (int i = 0; i < bytes; i++) {
         sramWrite(i, byte);
     }
@@ -105,13 +106,11 @@ void setFrame(uint8_t byte) {
 
 void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     Bitmap bitmap = getBitmap(index);
-    
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
 void writeChar(uint16_t row, uint16_t col, uint16_t code) {
     Character character = getCharacter(code);
-    
     bufferBitmap(row, col, character.bitmap, FONT_WIDTH, FONT_HEIGHT);
 }
 
@@ -135,6 +134,13 @@ void writeString(uint16_t row, uint16_t col, char *string) {
 
 void unifontDemo(void) {
     for (uint8_t i = 0; i < DEMO_TEXT_SIZE; i++) {
-        writeString(i * 2,  0, getDemoText(i));
+        writeString(i * 2, 0, getDemoText(i));
     }
+}
+
+void display(void) {
+    initDisplay();
+    resetAddressCounter();
+    sramToDisplay();
+    updateDisplay();
 }

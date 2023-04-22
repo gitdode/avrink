@@ -130,6 +130,16 @@ static void sramFun(void) {
     printString(buf);
 }
 
+static void demo(void) {
+    ledOn();
+    sramFun();
+    setFrame(0x00);
+    writeBitmap(1, 194, TUX);
+    unifontDemo();
+    display();
+    ledOff();
+}
+
 int main(void) {
 
     initUSART();
@@ -143,18 +153,7 @@ int main(void) {
     while (true) {
 
         if (!once) {
-            sramFun();
-            setFrame(0x00);
-            writeBitmap(1, 194, TUX);
-            unifontDemo();
-
-            ledOn();
-            initDisplay();
-            resetAddressCounter();
-            sramToDisplay();
-            updateDisplay();
-            ledOff();
-
+            demo();
             once = true;
         }
 
@@ -163,10 +162,10 @@ int main(void) {
             ints = 0;
             // do something and update the display
         }
-        
+
         if (isUSARTReceived()) {
             char data[64];
-            getUSARTData(data, sizeof(data));
+            getUSARTData(data, sizeof (data));
             handle(data);
         }
     }
