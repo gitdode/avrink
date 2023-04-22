@@ -58,7 +58,7 @@ static void handleBitmap(char *data) {
  */
 static void handleDemo(void) {
     setFrame(0x00);
-    writeBitmap(1, 194, TUX);
+    writeBitmap(1, 198, TUX);
     unifontDemo();
     display();
 }
