@@ -8,12 +8,14 @@
 #ifndef USART_H_
 #define USART_H_
 
+#include <stdbool.h>
+#include <stdio.h>
+
+#define USART_LENGTH 73
+
 #ifndef BAUD
 #define BAUD 9600
 #endif
-
-#include <stdbool.h>
-#include <stdio.h>
 
 /**
  * Sets the baudrate and enables the transmitter and receiver.

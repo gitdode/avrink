@@ -15,7 +15,7 @@
 
 static volatile bool usartReceived = false;
 
-static char usartData[64];
+static char usartData[USART_LENGTH];
 
 /**
  * Called when data was received via USART.
@@ -24,7 +24,7 @@ ISR(USART_RX_vect) {
     if (bit_is_set(UCSR0A, RXC0) && !usartReceived) {
         char data = UDR0;
         size_t length = strlen(usartData);
-        if (length < sizeof (usartData) - 1 && data != '\n' && data != '\r') {
+        if (length < USART_LENGTH - 1 && data != '\n' && data != '\r') {
             usartData[length] = data;
         } else {
             usartData[length] = '\0';
@@ -52,7 +52,7 @@ void getUSARTData(char* const data, size_t const size) {
     if (size > 0) {
         data[0] = '\0';
         strncat(data, usartData, size - 1);
-        memset(usartData, 0, ARRAY_LENGTH(usartData));
+        memset(usartData, 0, USART_LENGTH);
         usartReceived = false;
     }
 }

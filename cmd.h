@@ -8,15 +8,16 @@
 #ifndef CMD_H
 #define CMD_H
 
-#define CMD_TEXT    "text"
-#define CMD_BITMAP  "bitmap"
-#define CMD_ROW     "row"
-#define CMD_COL     "col"
+#define CMD_CLEAR   'c' // clear frame buffer: 'c <0xff|0x00>'
+#define CMD_TEXT    't' // display one line of text: 't <row> <col> <text>'
+#define CMD_BITMAP  'b' // display a bitmap: 'b <row> <col> <index>'
+#define CMD_DEMO    'd' // display Unifont demo: 'd'
+#define CMD_UPDATE  'u' // update display: 'u'
 
 /**
- * Initial attempt to send text via USART to the display.
+ * Handles the given command.
  * @param data
  */
-void handle(char *data);
+void handleCmd(char *data);
 
 #endif /* CMD_H */

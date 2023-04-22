@@ -37,8 +37,6 @@
 
 static volatile uint16_t ints = 0;
 
-static bool once = false;
-
 ISR(TIMER0_COMPA_vect) {
     ints++;
 }
@@ -112,34 +110,6 @@ static void ledOff(void) {
     PORT_LED &= ~(1 << PIN_LED);
 }
 
-/**
- * Just testing.
- */
-static void sramFun(void) {
-    uint8_t status = sramReadStatus();
-    printByte(status);
-
-    char *easter = "hello easter bunny!";
-    size_t written = sramWriteString(0x123, easter);
-
-    char bunny[written + 1]; // add one for null terminator
-    sramReadString(0x123, bunny, sizeof (bunny));
-
-    char buf[strlen(bunny) + 3];
-    snprintf(buf, sizeof (buf), "%s\r\n", bunny);
-    printString(buf);
-}
-
-static void demo(void) {
-    ledOn();
-    sramFun();
-    setFrame(0x00);
-    writeBitmap(1, 194, TUX);
-    unifontDemo();
-    display();
-    ledOff();
-}
-
 int main(void) {
 
     initUSART();
@@ -152,21 +122,18 @@ int main(void) {
 
     while (true) {
 
-        if (!once) {
-            demo();
-            once = true;
-        }
-
         // display should not be updated more frequently than once every 180 seconds
         if (ints >= INTS_SEC * 180) {
             ints = 0;
+            ledOn();
             // do something and update the display
+            ledOff();
         }
 
         if (isUSARTReceived()) {
-            char data[64];
-            getUSARTData(data, sizeof (data));
-            handle(data);
+            char data[USART_LENGTH];
+            getUSARTData(data, USART_LENGTH);
+            handleCmd(data);
         }
     }
 

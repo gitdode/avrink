@@ -14,7 +14,7 @@
 static const char demoLine1[] PROGMEM = "Hello GNU Unifont! \a";
 static const char demoLine2[] PROGMEM = "!\"#$%&'()*+,-./0123456789";
 static const char demoLine3[] PROGMEM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-static const char demoLine4[] PROGMEM = ":;<=>?@[\\]^_`{|}~¿×÷";
+static const char demoLine4[] PROGMEM = ":;<=>?@[\\]^_`{|}~×÷";
 // static const char demoLine4[] PROGMEM = "¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿";
 static const char demoLine5[] PROGMEM = "abcdefghijklmnopqrstuvwxyz";
 static const char demoLine6[] PROGMEM = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß";

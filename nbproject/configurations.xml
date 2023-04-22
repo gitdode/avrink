@@ -4,8 +4,8 @@
     <df root="/home/dode/dev/avrink" name="0">
       <in>avrink.c</in>
       <in>bitmaps.c</in>
+      <in>cmd.c</in>
       <in>display.c</in>
-      <in>display.h</in>
       <in>eink.c</in>
       <in>spi.c</in>
       <in>sram.c</in>
@@ -46,14 +46,10 @@
           <cTool>
             <incDir>
               <pElem>.</pElem>
-              <pElem>.</pElem>
             </incDir>
             <preprocessorList>
               <Elem>BAUD=9600</Elem>
-              <Elem>BAUD=9600</Elem>
-              <Elem>F_CPU=1000000UL</Elem>
               <Elem>F_CPU=8000000UL</Elem>
-              <Elem>__AVR_ATmega328P__</Elem>
               <Elem>__AVR_ATmega328P__</Elem>
             </preprocessorList>
           </cTool>
@@ -68,6 +64,14 @@
         </cTool>
       </item>
       <item path="/home/dode/dev/avrink/bitmaps.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="/home/dode/dev/avrink/cmd.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="/home/dode/dev/avrink/display.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
       </item>
@@ -90,10 +94,6 @@
       <item path="/home/dode/dev/avrink/usart.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
-      </item>
-      <item path="display.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="display.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
