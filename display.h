@@ -8,6 +8,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "dejavu.h"
+
 /**
  * Copies image data from SRAM to display.
  */
@@ -35,7 +37,7 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index);
  * @param col (1 pixel)
  * @param code
  */
-void writeChar(uint16_t row, uint16_t col, uint16_t code);
+void writeChar(uint16_t row, uint16_t col, DCharacter character);
 
 /**
  * Writes the given string to the given row and column.

@@ -6,8 +6,8 @@
  * Created on 8. April 2023, 16:50
  */
 
-#ifndef FONT_H
-#define FONT_H
+#ifndef UNIFONT_H
+#define UNIFONT_H
 
 #define FONT_WIDTH 8
 #define FONT_HEIGHT 16
@@ -39,5 +39,5 @@ char * getDemoText(uint8_t line);
  */
 Character getCharacter(uint16_t code);
 
-#endif /* FONT_H */
+#endif /* UNIFONT_H */
 

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 #include "unifont.h"
+#include "dejavu.h"
 #include "bitmaps.h"
 #include "sram.h"
 #include "eink.h"
@@ -109,9 +110,8 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
-void writeChar(uint16_t row, uint16_t col, uint16_t code) {
-    Character character = getCharacter(code);
-    bufferBitmap(row, col, character.bitmap, FONT_WIDTH, FONT_HEIGHT);
+void writeChar(uint16_t row, uint16_t col, DCharacter character) {
+    bufferBitmap(row, col, character.bitmap, character.width, DEJAVU_HEIGHT);
 }
 
 void writeString(uint16_t row, uint16_t col, char *string) {
@@ -125,8 +125,9 @@ void writeString(uint16_t row, uint16_t col, char *string) {
             offset = 64;
         } else {
             uint16_t code = c + offset;
-            writeChar(row, col, code);
-            col += FONT_WIDTH;
+            DCharacter character = getDCharacter(code);
+            writeChar(row, col, character);
+            col += character.width;
             offset = 0;
         }
     }
