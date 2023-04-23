@@ -35,4 +35,4 @@ Write some text and a bitmap:
 `t 8 0 right. That's about it!`  
 `u` // update display  
 
-<img src="https://luniks.net/other/AVRInk-08.jpg"/>
+<img src="https://luniks.net/other/AVRInk-09.jpg"/>
