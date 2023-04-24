@@ -6,6 +6,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include <avr/pgmspace.h>
 #include "unifont.h"
 #include "dejavu.h"
@@ -110,14 +111,34 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
-void writeChar(uint16_t row, uint16_t col, DCharacter character) {
-    bufferBitmap(row, col, character.bitmap, character.width, DEJAVU_HEIGHT);
+static uint8_t writeUnifontGlyph(uint16_t row, uint16_t col, uint16_t code) {
+    Glyph glyph = getUnifontGlyph(code);
+    bufferBitmap(row, col, glyph.bitmap, glyph.width, UNIFONT_HEIGHT);
+    
+    return glyph.width;
 }
 
-void writeString(uint16_t row, uint16_t col, char *string) {
+static uint8_t writeDejaVuGlyph(uint16_t row, uint16_t col, uint16_t code) {
+    Glyph glyph = getDejaVuGlyph(code);
+    bufferBitmap(row, col, glyph.bitmap, glyph.width, DEJAVU_HEIGHT);
+    
+    return glyph.width;
+}
+
+uint8_t writeGlyph(uint16_t row, uint16_t col, Font font, uint16_t code) {
+    if (font == UNIFONT) {    
+        return writeUnifontGlyph(row, col, code);
+    } else if (font == DEJAVU) {
+        return writeDejaVuGlyph(row, col, code);
+    } else {
+        return 0;
+    }
+}
+
+void writeString(uint16_t row, uint16_t col, Font font, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
-        uint8_t c = (uint8_t) * string;
+        uint8_t c = (uint8_t) *string;
         if (c == 194) {
             // multibyte
         } else if (c == 195) {
@@ -125,9 +146,7 @@ void writeString(uint16_t row, uint16_t col, char *string) {
             offset = 64;
         } else {
             uint16_t code = c + offset;
-            DCharacter character = getDCharacter(code);
-            writeChar(row, col, character);
-            col += character.width;
+            col += writeGlyph(row, col, font, code);
             offset = 0;
         }
     }
@@ -135,7 +154,7 @@ void writeString(uint16_t row, uint16_t col, char *string) {
 
 void unifontDemo(void) {
     for (uint8_t i = 0; i < DEMO_TEXT_SIZE; i++) {
-        writeString(i * 2, 0, getDemoText(i));
+        writeString(i * 2, 0, UNIFONT, getDemoText(i));
     }
 }
 

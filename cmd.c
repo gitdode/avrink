@@ -34,9 +34,14 @@ static void text(char *data) {
     char *end;
     uint16_t row = strtol(strtok(NULL, " "), &end, 10);
     uint16_t col = strtol(strtok(NULL, " "), &end, 10);
+    char *font = strtok(NULL, " ");
     char *text = strtok(NULL, "\0");
     
-    writeString(row, col, text);
+    if (*font == 'u') {
+        writeString(row, col, UNIFONT, text);
+    } else {
+        writeString(row, col, DEJAVU, text);
+    }
 }
 
 /**

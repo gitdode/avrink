@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <avr/pgmspace.h>
+#include "font.h"
 #include "dejavu.h"
 #include "utils.h"
 
@@ -421,7 +422,7 @@ static const uint8_t DEGREE_SIGN[] PROGMEM = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-static const DCharacter chars[] PROGMEM = {
+static const Glyph glyphs[] PROGMEM = {
     {0x0021, 16, EXCLAMATION_MARK},
     {0x0023, 32, NUMBER_SIGN},
     {0x002a, 32, ASTERISK},
@@ -451,17 +452,18 @@ static const DCharacter chars[] PROGMEM = {
     {0x00b0, 16, DEGREE_SIGN}
 };
 
-DCharacter getDCharacter(uint16_t code) {
-    size_t length = ARRAY_LENGTH(chars);
+// TODO resolve code duplication with #getUnifontGlyph
+Glyph getDejaVuGlyph(uint16_t code) {
+    size_t length = ARRAY_LENGTH(glyphs);
     for (size_t i = 0; i < length; i++) {
-        if (pgm_read_word(&chars[i].code) == code) {
-            static DCharacter character;
-            memcpy_P(&character, &chars[i], sizeof (DCharacter));
+        if (pgm_read_word(&glyphs[i].code) == code) {
+            static Glyph glyph;
+            memcpy_P(&glyph, &glyphs[i], sizeof (Glyph));
             
-            return character;
+            return glyph;
         }
     }
     
     // return question mark if unknown code point
-    return getDCharacter(0x003f);
+    return getDejaVuGlyph(0x003f);
 }
