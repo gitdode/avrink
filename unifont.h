@@ -18,20 +18,21 @@
 #define DEMO_TEXT_SIZE 7
 
 /**
+ * Glyphs of this font.
+ */
+extern const Glyph unifontGlyphs[];
+
+/**
+ * Number of glyphs of this font.
+ */
+extern const uint8_t unifontLength;
+
+/**
  * Returns the given line of demo text.
  * @param line
  * @return address
  */
 char * getDemoText(uint8_t line);
-
-/**
- * Returns the glyph at the given pseudo UTF-8 code point, i.e. 0x00f6 
- * for U+00F6. If there is no glyph for that code point, a question mark 
- * is returned.
- * @param code
- * @return Glyph
- */
-Glyph getUnifontGlyph(uint16_t code);
 
 #endif /* UNIFONT_H */
 

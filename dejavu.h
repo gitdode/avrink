@@ -16,13 +16,14 @@
 #define DEJAVU_SIZE DEJAVU_WIDTH * DEJAVU_HEIGHT / 8
 
 /**
- * Returns the glyph at the given pseudo UTF-8 code point, i.e. 0x00f6 
- * for U+00F6. If there is no glyph for that code point, a question mark 
- * is returned.
- * @param code
- * @return Glyph
+ * Glyphs of this font.
  */
-Glyph getDejaVuGlyph(uint16_t code);
+extern const Glyph dejaVuGlyphs[];
+
+/**
+ * Number of glyphs of this font.
+ */
+extern const uint8_t dejaVuLength;
 
 #endif /* DEJAVU_H */
 

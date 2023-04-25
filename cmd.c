@@ -37,6 +37,7 @@ static void text(char *data) {
     char *font = strtok(NULL, " ");
     char *text = strtok(NULL, "\0");
     
+    // TODO improve/get rid of
     if (*font == 'u') {
         writeString(row, col, UNIFONT, text);
     } else {

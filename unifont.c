@@ -808,7 +808,7 @@ static const uint8_t YIN_YANG[] PROGMEM = {
     0x7F, 0xFE, 0x3F, 0xFC, 0x1F, 0xF8, 0x07, 0xE0  
 };
 
-static const Glyph glyphs[] PROGMEM = {
+const Glyph unifontGlyphs[] PROGMEM = {
     // bell (\a) maps to SMILING_FACE
     {0x0007, UNIFONT_WIDTH, SMILING_FACE},
     {0x0020, UNIFONT_WIDTH, SPACE},
@@ -1004,18 +1004,4 @@ static const Glyph glyphs[] PROGMEM = {
     {0x00ff, UNIFONT_WIDTH, y_diaeresis}
 };
 
-// TODO resolve code duplication with #getDejaVuGlyph
-Glyph getUnifontGlyph(uint16_t code) {
-    size_t length = ARRAY_LENGTH(glyphs);
-    for (size_t i = 0; i < length; i++) {
-        if (pgm_read_word(&glyphs[i].code) == code) {
-            static Glyph glyph;
-            memcpy_P(&glyph, &glyphs[i], sizeof (Glyph));
-            
-            return glyph;
-        }
-    }
-    
-    // return question mark if unknown code point
-    return getUnifontGlyph(0x003f);
-}
+const uint8_t unifontLength = ARRAY_LENGTH(unifontGlyphs);

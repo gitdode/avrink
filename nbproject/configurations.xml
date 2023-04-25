@@ -7,6 +7,7 @@
       <in>cmd.c</in>
       <in>display.c</in>
       <in>eink.c</in>
+      <in>font.c</in>
       <in>spi.c</in>
       <in>sram.c</in>
       <in>unifont.c</in>
@@ -94,6 +95,8 @@
       <item path="/home/dode/dev/avrink/usart.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
+      </item>
+      <item path="font.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

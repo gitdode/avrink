@@ -8,7 +8,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "dejavu.h"
+#include "font.h"
 
 /**
  * Copies image data from SRAM to display.

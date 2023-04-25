@@ -14,6 +14,7 @@
 #include "sram.h"
 #include "eink.h"
 #include "usart.h"
+#include "utils.h"
 
 /**
  * Writes the given byte at the given index for the given bitmap height
@@ -111,21 +112,24 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
+// TODO improve/get rid of
 static uint8_t writeUnifontGlyph(uint16_t row, uint16_t col, uint16_t code) {
-    Glyph glyph = getUnifontGlyph(code);
+    Glyph glyph = getGlyph(code, unifontGlyphs, unifontLength);
     bufferBitmap(row, col, glyph.bitmap, glyph.width, UNIFONT_HEIGHT);
     
     return glyph.width;
 }
 
+// TODO improve/get rid of
 static uint8_t writeDejaVuGlyph(uint16_t row, uint16_t col, uint16_t code) {
-    Glyph glyph = getDejaVuGlyph(code);
+    Glyph glyph = getGlyph(code, dejaVuGlyphs, dejaVuLength);
     bufferBitmap(row, col, glyph.bitmap, glyph.width, DEJAVU_HEIGHT);
     
     return glyph.width;
 }
 
 uint8_t writeGlyph(uint16_t row, uint16_t col, Font font, uint16_t code) {
+    // TODO improve/get rid of
     if (font == UNIFONT) {    
         return writeUnifontGlyph(row, col, code);
     } else if (font == DEJAVU) {

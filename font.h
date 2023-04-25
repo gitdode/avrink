@@ -22,5 +22,15 @@ typedef struct {
     const uint8_t *bitmap;
 } Glyph;
 
-#endif /* FONT_H */
+/**
+ * Returns the glyph at the given pseudo UTF-8 code point, i.e. 0x00f6 
+ * for U+00F6 from the given glyphs with the given length.
+ * If there is no glyph for that code point, a question mark is returned.
+ * @param code
+ * @param glyphs
+ * @param length
+ * @return Glyph
+ */
+Glyph getGlyph(uint16_t code, const Glyph *glyphs, const size_t length);
 
+#endif /* FONT_H */
