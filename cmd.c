@@ -37,11 +37,11 @@ static void text(char *data) {
     char *font = strtok(NULL, " ");
     char *text = strtok(NULL, "\0");
     
-    // TODO improve/get rid of
-    if (*font == 'u') {
-        writeString(row, col, UNIFONT, text);
-    } else {
-        writeString(row, col, DEJAVU, text);
+    // TODO improve
+    switch(*font) {
+        case 'u': writeString(row, col, UNIFONT, text); break;
+        case 'd': writeString(row, col, DEJAVU, text); break;
+        default: break;
     }
 }
 
@@ -85,5 +85,6 @@ void handleCmd(char *data) {
         case CMD_BITMAP: bitmap(data); break;
         case CMD_DEMO:   demo(); break;
         case CMD_UPDATE: update(); break;
+        default: break;
     }
 }

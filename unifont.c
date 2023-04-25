@@ -24,7 +24,7 @@ static const char demoLine7[] PROGMEM = "àáâãäåæçèéêëìíîïðñò�
 /**
  * Demo text.
  */
-static PGM_P const demoText[DEMO_TEXT_SIZE] PROGMEM = {
+static PGM_P const demoText[UNIFONT_DEMO_SIZE] PROGMEM = {
     demoLine1,
     demoLine2,
     demoLine3,
@@ -34,7 +34,7 @@ static PGM_P const demoText[DEMO_TEXT_SIZE] PROGMEM = {
     demoLine7
 };
 
-char * getDemoText(uint8_t line) {
+char * getUnifontDemo(uint8_t line) {
     static char buf[64];
     strcpy_P(buf, (PGM_P)pgm_read_word(&demoText[line]));
     

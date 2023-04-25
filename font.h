@@ -8,6 +8,9 @@
 #ifndef FONT_H
 #define FONT_H
 
+/**
+ * Fonts available here.
+ */
 typedef enum {
     UNIFONT,
     DEJAVU

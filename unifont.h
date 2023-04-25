@@ -15,7 +15,7 @@
 #define UNIFONT_HEIGHT 16
 #define UNIFONT_SIZE UNIFONT_WIDTH * UNIFONT_HEIGHT / 8
 
-#define DEMO_TEXT_SIZE 7
+#define UNIFONT_DEMO_SIZE 7
 
 /**
  * Glyphs of this font.
@@ -32,7 +32,7 @@ extern const uint8_t unifontLength;
  * @param line
  * @return address
  */
-char * getDemoText(uint8_t line);
+char * getUnifontDemo(uint8_t line);
 
 #endif /* UNIFONT_H */
 
