@@ -112,26 +112,14 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
-uint8_t writeGlyph(uint16_t row, uint16_t col, Font font, uint16_t code) {
-    // TODO improve
-    switch(font) {
-        case UNIFONT: {
-            Glyph glyph = getGlyph(code, unifontGlyphs, unifontLength);
-            bufferBitmap(row, col, glyph.bitmap, glyph.width, UNIFONT_HEIGHT);
-
-            return glyph.width;
-        }
-        case DEJAVU: {
-            Glyph glyph = getGlyph(code, dejaVuGlyphs, dejaVuLength);
-            bufferBitmap(row, col, glyph.bitmap, glyph.width, DEJAVU_HEIGHT);
-
-            return glyph.width;
-        }
-        default: return 0;
-    }
+uint8_t writeGlyph(uint16_t row, uint16_t col, Font *font, uint16_t code) {
+    Glyph glyph = getGlyph(font, code);
+    bufferBitmap(row, col, glyph.bitmap, glyph.width, font->height);
+    
+    return glyph.width;
 }
 
-void writeString(uint16_t row, uint16_t col, Font font, char *string) {
+void writeString(uint16_t row, uint16_t col, Font *font, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
         uint8_t c = (uint8_t) *string;
@@ -149,8 +137,9 @@ void writeString(uint16_t row, uint16_t col, Font font, char *string) {
 }
 
 void unifontDemo(void) {
+    Font unifont = {unifontGlyphs, unifontLength, UNIFONT_HEIGHT};
     for (uint8_t i = 0; i < UNIFONT_DEMO_SIZE; i++) {
-        writeString(i * 2, 0, UNIFONT, getUnifontDemo(i));
+        writeString(i * 2, 0, &unifont, getUnifontDemo(i));
     }
 }
 

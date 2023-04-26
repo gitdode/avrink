@@ -9,31 +9,38 @@
 #define FONT_H
 
 /**
- * Fonts available here.
- */
-typedef enum {
-    UNIFONT,
-    DEJAVU
-} Font;
-
-/**
- * A glyph with its pseudo UTF-8 code point, width and bitmap.
+ * A glyph with its pseudo UTF-8 code point, width, height and bitmap.
  */
 typedef struct {
+    /** Pseudo UTF-8 code point of the glyph. */
     const uint16_t code;
+    /** Width of the glyph. */
     const uint8_t width;
+    /** Bitmap of the glyph. */
     const uint8_t *bitmap;
 } Glyph;
 
 /**
+ * Fonts available here. Since the height is the same for all glyphs,
+ * it is stored in the font instead of redundantly in each glyph.
+ */
+typedef struct {
+    /** Glyphs of this font. */
+    const Glyph *glyphs;
+    /** Number of glyphs of this font. */
+    const uint8_t length;
+    /** Height of (the glyphs of) this font. */
+    const uint8_t height;
+} Font;
+
+/**
  * Returns the glyph at the given pseudo UTF-8 code point, i.e. 0x00f6 
- * for U+00F6 from the given glyphs with the given length.
+ * for U+00F6 from the given font.
  * If there is no glyph for that code point, a question mark is returned.
+ * @param font
  * @param code
- * @param glyphs
- * @param length
  * @return Glyph
  */
-Glyph getGlyph(uint16_t code, const Glyph *glyphs, const size_t length);
+Glyph getGlyph(Font *font, uint16_t code);
 
 #endif /* FONT_H */
