@@ -9,17 +9,18 @@ with an AVR MCU (ATmega328P) and avr-libc.
 Currently implemented:
 
 * Nearly complete UTF-8 set of GNU Unifont
+* Small subset of large glyphs in DejaVu: 0-9 and some special characters
 * Store font and bitmaps in program memory instead of RAM
 * Use SRAM as frame buffer
-* Draw strings in Unifont
+* Draw strings in Unifont and DejaVu
 * Draw bitmaps
-* Clear display, write text and bitmaps and update display via USART
+* Write text and bitmaps via USART
 * Logging via USART
 
-<img src="https://luniks.net/other/AVRInk-06.jpg"/>
-
 Thanks to [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD)
-for helping me out!
+for helping me out with the display initialization!  
+
+<img src="https://luniks.net/other/AVRInk/AVRInk-06.jpg"/>
 
 ## Write something via USART
 
@@ -27,12 +28,11 @@ Connect to the controller with for example GTKTerm (9600 Baud).
 Write some text and a bitmap:
 
 `c 0` // clear display to white  
-`t 0 0 So this is some text.` // write text to row 0 column 0  
-`t 2 0 And here is another line`  
-`t 4 0 of text.`  
-`b 0 198 0` // write bitmap with index 0 (Tux) to row 0 column 198  
-`t 6 0 There is also Tux on the`  
-`t 8 0 right. That's about it!`  
+`t 0 0 d 22,6°` // write text in DejaVu (large) to row 0 column 0  
+`t 4 128 u Temperature` write text in Unifont (small) to row 4 column 128  
+`t 8 0 d 50%`  
+`t 12 128 u Humidity`  
+`b 7 198 0` // write bitmap with index 0 (Tux) to row 7 column 198  
 `u` // update display  
 
-<img src="https://luniks.net/other/AVRInk-09.jpg"/>
+<img src="https://luniks.net/other/AVRInk/AVRInk-10.jpg"/>
