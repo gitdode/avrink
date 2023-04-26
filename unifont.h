@@ -6,38 +6,33 @@
  * Created on 8. April 2023, 16:50
  */
 
-#ifndef FONT_H
-#define FONT_H
+#ifndef UNIFONT_H
+#define UNIFONT_H
 
-#define FONT_WIDTH 8
-#define FONT_HEIGHT 16
-#define FONT_SIZE FONT_WIDTH * FONT_HEIGHT / 8
+#include "font.h"
 
-#define DEMO_TEXT_SIZE 7
+#define UNIFONT_WIDTH 8
+#define UNIFONT_HEIGHT 16
+#define UNIFONT_SIZE UNIFONT_WIDTH * UNIFONT_HEIGHT / 8
+
+#define UNIFONT_DEMO_SIZE 7
 
 /**
- * A character with its pseudo UTF-8 code point and bitmap.
+ * Glyphs of this font.
  */
-typedef struct {
-    const uint16_t code;
-    const uint8_t *bitmap;
-} Character;
+extern const Glyph unifontGlyphs[];
+
+/**
+ * Number of glyphs of this font.
+ */
+extern const uint8_t unifontLength;
 
 /**
  * Returns the given line of demo text.
  * @param line
  * @return address
  */
-char * getDemoText(uint8_t line);
+char * getUnifontDemo(uint8_t line);
 
-/**
- * Returns the Character at the given pseudo UTF-8 code point, i.e. 0x00f6 
- * for U+00F6. If there is no character for that code point, a question mark 
- * is returned.
- * @param code
- * @return Character
- */
-Character getCharacter(uint16_t code);
-
-#endif /* FONT_H */
+#endif /* UNIFONT_H */
 

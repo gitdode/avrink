@@ -8,6 +8,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "font.h"
+
 /**
  * Copies image data from SRAM to display.
  */
@@ -29,21 +31,24 @@ void setFrame(uint8_t byte);
 void writeBitmap(uint16_t row, uint16_t col, uint16_t index);
 
 /**
- * Writes the character with the given pseudo UTF-8 code point to the given
- * row and column.
+ * Writes the glyph with the given pseudo UTF-8 code point with the given
+ * font to the given row and column and returns the width of the glyph.
  * @param row (8 pixels)
  * @param col (1 pixel)
+ * @param font
  * @param code
+ * @return glyph width
  */
-void writeChar(uint16_t row, uint16_t col, uint16_t code);
+uint8_t writeChar(uint16_t row, uint16_t col, Font *font, uint16_t code);
 
 /**
- * Writes the given string to the given row and column.
+ * Writes the given string with the given font to the given row and column.
  * @param row (8 pixels)
  * @param col (1 pixel)
+ * @param font
  * @param string
  */
-void writeString(uint16_t row, uint16_t col, char *string);
+void writeString(uint16_t row, uint16_t col, Font *font, char *string);
 
 /**
  * Displays a demo for the awesome Unifont.

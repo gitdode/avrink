@@ -11,6 +11,9 @@
 #include "usart.h"
 #include "eink.h"
 #include "display.h"
+#include "font.h"
+#include "unifont.h"
+#include "dejavu.h"
 #include "bitmaps.h"
 
 /**
@@ -26,7 +29,7 @@ static void clear(char *data) {
 }
 
 /**
- * Writes one line of text to the given row and column.
+ * Writes one line of text in the given font to the given row and column.
  * @param data
  */
 static void text(char *data) {
@@ -34,9 +37,20 @@ static void text(char *data) {
     char *end;
     uint16_t row = strtol(strtok(NULL, " "), &end, 10);
     uint16_t col = strtol(strtok(NULL, " "), &end, 10);
+    char *font = strtok(NULL, " ");
     char *text = strtok(NULL, "\0");
     
-    writeString(row, col, text);
+    switch(*font) {
+        case FONT_UNIFONT: {
+            Font unifont = {unifontGlyphs, unifontLength, UNIFONT_HEIGHT};
+            writeString(row, col, &unifont, text);
+        }; break;
+        case FONT_DEJAVU: {
+            Font dejavu = {dejaVuGlyphs, dejaVuLength, DEJAVU_HEIGHT};
+            writeString(row, col, &dejavu, text);
+        }; break;
+        default: break;
+    }
 }
 
 /**
@@ -79,5 +93,6 @@ void handleCmd(char *data) {
         case CMD_BITMAP: bitmap(data); break;
         case CMD_DEMO:   demo(); break;
         case CMD_UPDATE: update(); break;
+        default: break;
     }
 }

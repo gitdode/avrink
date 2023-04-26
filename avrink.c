@@ -26,8 +26,6 @@
 #include "spi.h"
 #include "sram.h"
 #include "eink.h"
-#include "unifont.h"
-#include "bitmaps.h"
 #include "cmd.h"
 #include "display.h"
 #include "utils.h"

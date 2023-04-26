@@ -15,8 +15,11 @@
  * A bitmap with its width and height, and data.
  */
 typedef struct {
+    /** Width of the bitmap, must be a multiple of 8. */
     const uint16_t width;
+    /** Height of the bitmap, must be a multiple of 8. */
     const uint16_t height;
+    /** The actual bitmap. */
     const uint8_t *bitmap;
 } Bitmap;
 

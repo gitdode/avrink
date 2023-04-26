@@ -11,7 +11,7 @@ PROGRAMMER_TYPE = avrispmkII
 PROGRAMMER_ARGS = 
 
 MAIN = avrink.c
-SRC = unifont.c bitmaps.c usart.c spi.c sram.c eink.c cmd.c display.c
+SRC = font.c unifont.c dejavu.c bitmaps.c usart.c spi.c sram.c eink.c cmd.c display.c
 
 CC = avr-gcc
 OBJCOPY = avr-objcopy

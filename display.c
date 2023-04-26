@@ -6,12 +6,15 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include <avr/pgmspace.h>
 #include "unifont.h"
+#include "dejavu.h"
 #include "bitmaps.h"
 #include "sram.h"
 #include "eink.h"
 #include "usart.h"
+#include "utils.h"
 
 /**
  * Writes the given byte at the given index for the given bitmap height
@@ -109,15 +112,17 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
-void writeChar(uint16_t row, uint16_t col, uint16_t code) {
-    Character character = getCharacter(code);
-    bufferBitmap(row, col, character.bitmap, FONT_WIDTH, FONT_HEIGHT);
+uint8_t writeGlyph(uint16_t row, uint16_t col, Font *font, uint16_t code) {
+    Glyph glyph = getGlyph(font, code);
+    bufferBitmap(row, col, glyph.bitmap, glyph.width, font->height);
+    
+    return glyph.width;
 }
 
-void writeString(uint16_t row, uint16_t col, char *string) {
+void writeString(uint16_t row, uint16_t col, Font *font, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
-        uint8_t c = (uint8_t) * string;
+        uint8_t c = (uint8_t) *string;
         if (c == 194) {
             // multibyte
         } else if (c == 195) {
@@ -125,16 +130,16 @@ void writeString(uint16_t row, uint16_t col, char *string) {
             offset = 64;
         } else {
             uint16_t code = c + offset;
-            writeChar(row, col, code);
-            col += FONT_WIDTH;
+            col += writeGlyph(row, col, font, code);
             offset = 0;
         }
     }
 }
 
 void unifontDemo(void) {
-    for (uint8_t i = 0; i < DEMO_TEXT_SIZE; i++) {
-        writeString(i * 2, 0, getDemoText(i));
+    Font unifont = {unifontGlyphs, unifontLength, UNIFONT_HEIGHT};
+    for (uint8_t i = 0; i < UNIFONT_DEMO_SIZE; i++) {
+        writeString(i * 2, 0, &unifont, getUnifontDemo(i));
     }
 }
 
