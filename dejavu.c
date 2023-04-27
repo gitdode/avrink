@@ -12,6 +12,8 @@
 #include "dejavu.h"
 #include "utils.h"
 
+#define HEIGHT 56
+
 static const uint8_t SPACE[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -761,7 +763,7 @@ static const uint8_t DEGREE_SIGN[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-const Glyph dejaVuGlyphs[] PROGMEM = {
+const Glyph glyphs[] PROGMEM = {
     {0x0020, 32, SPACE},
     {0x0021, 16, EXCLAMATION_MARK},
     {0x0023, 32, NUMBER_SIGN},
@@ -792,4 +794,8 @@ const Glyph dejaVuGlyphs[] PROGMEM = {
     {0x00b0, 16, DEGREE_SIGN}
 };
 
-const uint8_t dejaVuLength = ARRAY_LENGTH(dejaVuGlyphs);
+const Font getDejaVu(void) {
+    const Font dejaVu = {glyphs, ARRAY_LENGTH(glyphs), HEIGHT};
+    
+    return dejaVu;
+}

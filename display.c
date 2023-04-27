@@ -112,14 +112,14 @@ void writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
     bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
 }
 
-uint8_t writeGlyph(uint16_t row, uint16_t col, Font *font, uint16_t code) {
+uint8_t writeGlyph(uint16_t row, uint16_t col, Font font, uint16_t code) {
     Glyph glyph = getGlyph(font, code);
-    bufferBitmap(row, col, glyph.bitmap, glyph.width, font->height);
+    bufferBitmap(row, col, glyph.bitmap, glyph.width, font.height);
     
     return glyph.width;
 }
 
-void writeString(uint16_t row, uint16_t col, Font *font, char *string) {
+void writeString(uint16_t row, uint16_t col, Font font, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
         uint8_t c = (uint8_t) *string;
@@ -137,9 +137,9 @@ void writeString(uint16_t row, uint16_t col, Font *font, char *string) {
 }
 
 void unifontDemo(void) {
-    Font unifont = {unifontGlyphs, unifontLength, UNIFONT_HEIGHT};
+    Font unifont = getUnifont();
     for (uint8_t i = 0; i < UNIFONT_DEMO_SIZE; i++) {
-        writeString(i * 2, 0, &unifont, getUnifontDemo(i));
+        writeString(i * 2, 0, unifont, getUnifontDemo(i));
     }
 }
 

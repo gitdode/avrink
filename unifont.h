@@ -11,21 +11,7 @@
 
 #include "font.h"
 
-#define UNIFONT_WIDTH 8
-#define UNIFONT_HEIGHT 16
-#define UNIFONT_SIZE UNIFONT_WIDTH * UNIFONT_HEIGHT / 8
-
 #define UNIFONT_DEMO_SIZE 7
-
-/**
- * Glyphs of this font.
- */
-extern const Glyph unifontGlyphs[];
-
-/**
- * Number of glyphs of this font.
- */
-extern const uint8_t unifontLength;
 
 /**
  * Returns the given line of demo text.
@@ -33,6 +19,12 @@ extern const uint8_t unifontLength;
  * @return address
  */
 char * getUnifontDemo(uint8_t line);
+
+/**
+ * Returns an instance of the Unifont font.
+ * @return unifont
+ */
+const Font getUnifont(void);
 
 #endif /* UNIFONT_H */
 

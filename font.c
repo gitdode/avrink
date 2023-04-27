@@ -9,11 +9,11 @@
 #include <avr/pgmspace.h>
 #include "font.h"
 
-Glyph getGlyph(Font *font, uint16_t code) {
-    for (size_t i = 0; i < font->length; i++) {
-        if (pgm_read_word(&font->glyphs[i].code) == code) {
+Glyph getGlyph(Font font, uint16_t code) {
+    for (size_t i = 0; i < font.length; i++) {
+        if (pgm_read_word(&font.glyphs[i].code) == code) {
             static Glyph glyph;
-            memcpy_P(&glyph, &font->glyphs[i], sizeof (Glyph));
+            memcpy_P(&glyph, &font.glyphs[i], sizeof (Glyph));
             
             return glyph;
         }

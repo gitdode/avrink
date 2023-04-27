@@ -80,6 +80,8 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="/home/dode/dev/avrink/font.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="/home/dode/dev/avrink/spi.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
@@ -95,8 +97,6 @@
       <item path="/home/dode/dev/avrink/usart.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
-      </item>
-      <item path="font.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

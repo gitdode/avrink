@@ -11,19 +11,11 @@
 
 #include "font.h"
 
-#define DEJAVU_WIDTH 32
-#define DEJAVU_HEIGHT 56
-#define DEJAVU_SIZE DEJAVU_WIDTH * DEJAVU_HEIGHT / 8
-
 /**
- * Glyphs of this font.
+ * Returns an instance of the font derived from DejaVu.
+ * @return unifont
  */
-extern const Glyph dejaVuGlyphs[];
-
-/**
- * Number of glyphs of this font.
- */
-extern const uint8_t dejaVuLength;
+const Font getDejaVu(void);
 
 #endif /* DEJAVU_H */
 

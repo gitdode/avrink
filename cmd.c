@@ -41,14 +41,8 @@ static void text(char *data) {
     char *text = strtok(NULL, "\0");
     
     switch(*font) {
-        case FONT_UNIFONT: {
-            Font unifont = {unifontGlyphs, unifontLength, UNIFONT_HEIGHT};
-            writeString(row, col, &unifont, text);
-        }; break;
-        case FONT_DEJAVU: {
-            Font dejavu = {dejaVuGlyphs, dejaVuLength, DEJAVU_HEIGHT};
-            writeString(row, col, &dejavu, text);
-        }; break;
+        case FONT_UNIFONT: writeString(row, col, getUnifont(), text); break;
+        case FONT_DEJAVU: writeString(row, col, getDejaVu(), text); break;
         default: break;
     }
 }
