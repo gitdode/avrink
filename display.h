@@ -23,12 +23,14 @@ void sramToDisplay(void);
 void setFrame(uint8_t byte);
 
 /**
- * Writes the bitmap with the given index to the given row and column.
+ * Writes the bitmap with the given index to the given row and column 
+ * and returns the width of the bitmap.
  * @param row
  * @param col
  * @param index
+ * @return bitmap width
  */
-void writeBitmap(uint16_t row, uint16_t col, uint16_t index);
+uint8_t writeBitmap(uint16_t row, uint16_t col, uint16_t index);
 
 /**
  * Writes the glyph with the given pseudo UTF-8 code point with the given

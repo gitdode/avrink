@@ -8,11 +8,16 @@
 #ifndef CMD_H
 #define CMD_H
 
-#define CMD_CLEAR       'c' // clear frame buffer: 'c <0xff|0x00>'
-#define CMD_TEXT        't' // display one line of text: 't <row> <col> <text>'
-#define CMD_BITMAP      'b' // display a bitmap: 'b <row> <col> <index>'
-#define CMD_DEMO        'd' // display Unifont demo: 'd'
-#define CMD_UPDATE      'u' // update display: 'u'
+/** Clear frame buffer: 'c <0xff|0x00>'. */
+#define CMD_CLEAR       'c'
+/** Display one line of text: 't <row> <col> <font> <text>'. */
+#define CMD_TEXT        't'
+/** Display a bitmap: 'b <row> <col> <index>'. */
+#define CMD_BITMAP      'b'
+/** Display Unifont demo: 'd'. */
+#define CMD_DEMO        'd'
+/** Update display: 'u'. */
+#define CMD_UPDATE      'u'
 
 #define FONT_UNIFONT    'u'
 #define FONT_DEJAVU     'd'
