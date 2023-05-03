@@ -33,7 +33,7 @@
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
 
-static volatile uint16_t ints = 0;
+static volatile uint32_t ints = 0;
 
 ISR(TIMER0_COMPA_vect) {
     ints++;
