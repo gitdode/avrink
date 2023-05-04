@@ -27,12 +27,12 @@ for helping me out with the display initialization!
 Connect to the controller with for example GTKTerm (9600 Baud).  
 Write some text and a bitmap:
 
-`c 0` // clear display to white  
-`t 0 0 d 22,6°` // write text in DejaVu (large) to row 0 column 0  
-`t 4 128 u Temperature` write text in Unifont (small) to row 4 column 128  
-`t 8 0 d 50%`  
-`t 12 128 u Humidity`  
+`c 0` // clear display  
+`t 0 0 d 0-9` // write text in DejaVu (large) to row 0 column 0  
+`t 2 128 u Small text in` // write text in Unifont (small) to row 2 column 128  
+`t 4 128 u Unifont` // write text in Unifont (small) to row 4 column 128  
+`t 8 0 d !#%*+,-°` // write text in DejaVu (large) to row 8 column 0  
 `b 7 198 0` // write bitmap with index 0 (Tux) to row 7 column 198  
 `u` // update display  
 
-<img src="https://luniks.net/other/AVRInk/AVRInk-10.jpg"/>
+<img src="https://luniks.net/other/AVRInk/AVRInk-11.jpg"/>
