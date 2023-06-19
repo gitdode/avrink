@@ -20,24 +20,24 @@
  * Does a hardware reset.
  */
 static void hwReset(void) {
-    PORT_SRDI &= ~(1 << PIN_RST);
+    PORT_DISP &= ~(1 << PIN_RST);
     _delay_ms(10);
-    PORT_SRDI |= (1 << PIN_RST);
+    PORT_DISP |= (1 << PIN_RST);
 }
 
 /**
  * Waits until the display is no longer busy.
  */
 static void waitBusy(void) {
-    loop_until_bit_is_clear(PINP_SRDI, PIN_BUSY);
+    loop_until_bit_is_clear(PINP_DISP, PIN_BUSY);
 }
 
 void displayCmd(void) {
-    PORT_SRDI &= ~(1 << PIN_DC);
+    PORT_DSPI &= ~(1 << PIN_DC);
 }
 
 void displayData(void) {
-    PORT_SRDI |= (1 << PIN_DC);
+    PORT_DSPI |= (1 << PIN_DC);
 }
 
 void initDisplay(void) {
@@ -65,7 +65,7 @@ void initDisplay(void) {
     // - Wait 10ms
     waitBusy(); // datasheet mentions BUSY is high during reset
     _delay_ms(10);
-
+    
     printString("done setting initial configuration\r\n");
     
     // 3. Send Initialization Code
@@ -112,7 +112,7 @@ void initDisplay(void) {
     displayData();
     transmit(0x05); // ?
     displayDes();
-    
+
     printString("done sending initialization code\r\n");
 
     // 4. Load Waveform LUT
@@ -173,15 +173,18 @@ void updateDisplay(void) {
     transmit(0x96); // C[7:0] -> Soft start setting for Phase3 = 96h [POR]
     transmit(0x0f); // D[7:0] -> Duration setting = 0Fh [POR]
     displayDes();
-
+    
     printString("done setting softstart\r\n");
     
     // - Drive display panel by Command 0x22, 0x20
+    // 0xf4, 0xf5, 0xf6, 0xf7 do full update (DISPLAY mode 1)
+    // 0xfc, 0xfd, 0xfe, 0xff do partial update (DISPLAY mode 2)
+    // fast update as mentioned in the Good Display data sheet is not supported?
     displayCmd();
     displaySel();
     transmit(DISPLAY_UPDATE_CONTROL2);
     displayData();
-    transmit(0xf4); // not in datasheet table? 0xff (POR) does nothing.
+    transmit(0xf4);
     displayDes();
     
     displayCmd();

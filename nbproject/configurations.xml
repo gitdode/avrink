@@ -5,6 +5,7 @@
       <in>avrink.c</in>
       <in>bitmaps.c</in>
       <in>cmd.c</in>
+      <in>dejavu.c</in>
       <in>display.c</in>
       <in>eink.c</in>
       <in>font.c</in>
@@ -72,6 +73,10 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="/home/dode/dev/avrink/dejavu.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
       <item path="/home/dode/dev/avrink/display.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
@@ -80,7 +85,9 @@
         <cTool flags="0">
         </cTool>
       </item>
-      <item path="/home/dode/dev/avrink/font.c" ex="false" tool="0" flavor2="0">
+      <item path="/home/dode/dev/avrink/font.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/spi.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
