@@ -10,7 +10,6 @@
 #include <string.h>
 #include "sram.h"
 #include "spi.h"
-#include "usart.h"
 
 void sramWrite(uint16_t address, uint8_t data) {
     sramSel();

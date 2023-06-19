@@ -11,19 +11,19 @@
 #include "spi.h"
 
 void sramSel(void) {
-    PORT_SRDI &= ~(1 << PIN_SRCS);
+    PORT_SSPI &= ~(1 << PIN_SRCS);
 }
 
 void sramDes(void) {
-    PORT_SRDI |= (1 << PIN_SRCS);
+    PORT_SSPI |= (1 << PIN_SRCS);
 }
 
 void displaySel(void) {
-    PORT_SRDI &= ~(1 << PIN_ECS);
+    PORT_DSPI &= ~(1 << PIN_ECS);
 }
 
 void displayDes(void) {
-    PORT_SRDI |= (1 << PIN_ECS);
+    PORT_DSPI |= (1 << PIN_ECS);
 }
 
 uint8_t transmit(uint8_t data) {

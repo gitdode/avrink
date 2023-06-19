@@ -27,13 +27,15 @@
 #include "sram.h"
 #include "eink.h"
 #include "cmd.h"
+#include "bitmaps.h"
 #include "display.h"
 #include "utils.h"
 
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (64UL * 255)
 
-static volatile uint32_t ints = 0;
+static bool once = false;
+static volatile uint8_t ints = 0;
 
 ISR(TIMER0_COMPA_vect) {
     ints++;
@@ -49,26 +51,26 @@ static void initPins(void) {
     // set MOSI and SCK as output pin
     DDR_SPI |= (1 << PIN_MOSI);
     DDR_SPI |= (1 << PIN_SCK);
-    // pull SS (ensure master) and MISO high
+    // drive SS (ensure master) and MISO high
     PORT_SPI |= (1 << PIN_SS);
     PORT_SPI |= (1 << PIN_MISO);
 
     // set SRAM CS pin as output pin
-    DDR_SRDI |= (1 << PIN_SRCS);
+    DDR_SSPI |= (1 << PIN_SRCS);
 
     // set display CS, D/C and RST pin as output pin
-    DDR_SRDI |= (1 << PIN_ECS);
-    DDR_SRDI |= (1 << PIN_DC);
-    DDR_SRDI |= (1 << PIN_RST);
+    DDR_DSPI |= (1 << PIN_ECS);
+    DDR_DSPI |= (1 << PIN_DC);
+    DDR_DISP |= (1 << PIN_RST);
 
-    // enable pullup on all output pins
-    PORT_SRDI |= (1 << PIN_SRCS);
-    PORT_SRDI |= (1 << PIN_ECS);
-    PORT_SRDI |= (1 << PIN_DC);
-    PORT_SRDI |= (1 << PIN_RST);
+    // drive SPI and display output pins high
+    PORT_SSPI |= (1 << PIN_SRCS);
+    PORT_DSPI |= (1 << PIN_ECS);
+    PORT_DSPI |= (1 << PIN_DC);
+    PORT_DISP |= (1 << PIN_RST);
 
-    // set display BUSY pin as input pin
-    DDR_SRDI &= ~(1 << PIN_BUSY);
+    // set display BUSY pin as input pin (default)
+    DDR_DISP &= ~(1 << PIN_BUSY);
 }
 
 /**
@@ -119,6 +121,15 @@ int main(void) {
     sei();
 
     while (true) {
+        
+        // show a demo once at the start
+        if (!once) {
+            setFrame(0x00);
+            writeBitmap(1, 198, TUX);
+            unifontDemo();
+            display();
+            once = true;
+        }
 
         // display should not be updated more frequently than once every 180 seconds
         if (ints >= INTS_SEC * 180) {
