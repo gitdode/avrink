@@ -58,9 +58,9 @@ void writeString(uint16_t row, uint16_t col, Font font, char *string);
 void unifontDemo(void);
 
 /**
- * Initializes the display, resets the address counter,
- * copys image data from SRAM to display and updates it.
+ * Initializes the display, resets the address counter, copys image data from 
+ * SRAM to display and updates it, either in fast or full update mode.
  */
-void display(void);
+void display(bool fast);
 
 #endif /* DISPLAY_H */

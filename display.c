@@ -142,9 +142,9 @@ void unifontDemo(void) {
     }
 }
 
-void display(void) {
-    initDisplay();
+void display(bool fast) {
+    initDisplay(fast);
     resetAddressCounter();
     sramToDisplay();
-    updateDisplay();
+    updateDisplay(fast);
 }

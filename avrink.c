@@ -122,12 +122,12 @@ int main(void) {
 
     while (true) {
         
-        // show a demo once at the start
+        // show a demo once at the start with full update mode
         if (!once) {
             setFrame(0x00);
             writeBitmap(1, 198, TUX);
             unifontDemo();
-            display();
+            display(false);
             once = true;
         }
 
