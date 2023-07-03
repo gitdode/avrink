@@ -20,6 +20,7 @@ Currently implemented:
 
 Thanks to [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD)
 for helping me out with the display initialization!  
+Thanks to https://github.com/markbirss for telling me that fast update mode _is_ supported!  
 
 <img src="https://luniks.net/other/AVRInk/AVRInk-06.jpg"/>
 
