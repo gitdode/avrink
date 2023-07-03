@@ -62,20 +62,25 @@ static void bitmap(char *data) {
 }
 
 /**
- * Writes the Unifont demo.
+ * Writes the Unifont demo in fast update mode.
  */
 static void demo(void) {
     setFrame(0x00);
     writeBitmap(1, 198, TUX);
     unifontDemo();
-    display();
+    display(true);
 }
 
 /**
- * Updates the display.
+ * Updates the display with either fast or full update mode.
+ * @param data
  */
-static void update(void) {
-    display();
+static void update(char *data) {
+    strtok(data, " ");
+    char *end;
+    uint8_t fast = strtol(strtok(NULL, " "), &end, 16);
+    
+    display(fast);
 }
 
 void handleCmd(char *data) {
@@ -86,7 +91,7 @@ void handleCmd(char *data) {
         case CMD_TEXT:   text(data); break;
         case CMD_BITMAP: bitmap(data); break;
         case CMD_DEMO:   demo(); break;
-        case CMD_UPDATE: update(); break;
+        case CMD_UPDATE: update(data); break;
         default: break;
     }
 }

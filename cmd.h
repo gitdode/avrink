@@ -16,7 +16,7 @@
 #define CMD_BITMAP      'b'
 /** Display Unifont demo: 'd'. */
 #define CMD_DEMO        'd'
-/** Update display: 'u'. */
+/** Update display (full or fast mode): 'u <0|1>'. */
 #define CMD_UPDATE      'u'
 
 #define FONT_UNIFONT    'u'

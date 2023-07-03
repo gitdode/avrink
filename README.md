@@ -12,6 +12,7 @@ Currently implemented:
 * Small subset of large glyphs in DejaVu: 0-9 and some special characters
 * Store font and bitmaps in program memory instead of RAM
 * Use SRAM as frame buffer
+* Fast and full update mode
 * Draw strings in Unifont and DejaVu
 * Draw bitmaps
 * Write text and bitmaps via USART
@@ -33,6 +34,6 @@ Write some text and a bitmap:
 `t 4 128 u Unifont` // write text in Unifont (small) to row 4 column 128  
 `t 8 0 d !#%*+,-°` // write text in DejaVu (large) to row 8 column 0  
 `b 7 198 0` // write bitmap with index 0 (Tux) to row 7 column 198  
-`u` // update display  
+`u 1` // update display in fast update mode  (0 = full update mode)  
 
 <img src="https://luniks.net/other/AVRInk/AVRInk-11.jpg"/>

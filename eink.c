@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <util/delay.h>
 #include "eink.h"
@@ -32,20 +33,24 @@ static void waitBusy(void) {
     loop_until_bit_is_clear(PINP_DISP, PIN_BUSY);
 }
 
-void displayCmd(void) {
+void displayCmd(uint8_t cmd) {
     PORT_DSPI &= ~(1 << PIN_DC);
+    transmit(cmd);
 }
 
-void displayData(void) {
+void displayData(uint8_t data) {
     PORT_DSPI |= (1 << PIN_DC);
+    transmit(data);
 }
 
-void initDisplay(void) {
+void initDisplay(bool fast) {
     // 1. Power On
     // VCI already supplied - could supply by MCU output pin?
     // - Supply VCI
     // - Wait 10ms
     _delay_ms(10);
+    
+    displaySel();
 
     // 2. Set Initial Configuration
     // board selects 4-wire SPI by pulling BS1 low
@@ -57,10 +62,7 @@ void initDisplay(void) {
     waitBusy();
 
     // - SW Reset by Command 0x12
-    displayCmd();
-    displaySel();
-    transmit(SW_RESET);
-    displayDes();
+    displayCmd(SW_RESET);
 
     // - Wait 10ms
     waitBusy(); // datasheet mentions BUSY is high during reset
@@ -70,127 +72,112 @@ void initDisplay(void) {
     
     // 3. Send Initialization Code
     // - Set gate driver output by Command 0x01
-    displayCmd();
-    displaySel();
-    transmit(DRIVER_OUTPUT_CONTROL);
-    displayData();
-    transmit(DISPLAY_WIDTH - 1);
-    transmit((DISPLAY_WIDTH - 1) >> 8);
-    transmit(0x00); // GD=0 [POR], SM=0 [POR], TB = 0 [POR]
-    displayDes();
+    displayCmd(DRIVER_OUTPUT_CONTROL);
+    displayData(DISPLAY_WIDTH - 1);
+    displayData((DISPLAY_WIDTH - 1) >> 8);
+    displayData(0x00); // GD=0 [POR], SM=0 [POR], TB = 0 [POR]
     
     // - Set display RAM size by Command 0x11, 0x44, 0x45
-    displayCmd();
-    displaySel();
-    transmit(DATA_ENTRY_MODE_SETTING);
-    displayData();
-    transmit(0x03); // A[2:0] = 011 [POR]
-    displayDes();
+    displayCmd(DATA_ENTRY_MODE_SETTING);
+    displayData(0x03); // A[2:0] = 011 [POR]
     
-    displayCmd();
-    displaySel();
-    transmit(RAM_X_ADDRESS_POSITION);
-    displayData();
-    transmit(0x00 + RAM_X_OFFSET);
-    transmit(DISPLAY_H_BYTES - 1 + RAM_X_OFFSET);
-    displayDes();
+    displayCmd(RAM_X_ADDRESS_POSITION);
+    displayData(0x00 + RAM_X_OFFSET);
+    displayData(DISPLAY_H_BYTES - 1 + RAM_X_OFFSET);
     
-    displayCmd();
-    displaySel();
-    transmit(RAM_Y_ADDRESS_POSITION);
-    displayData();
-    transmit(0x00);
-    transmit(0x00);
-    transmit(DISPLAY_WIDTH - 1);
-    transmit((DISPLAY_WIDTH - 1) >> 8);
-    displayDes();
+    displayCmd(RAM_Y_ADDRESS_POSITION);
+    displayData(0x00);
+    displayData(0x00);
+    displayData(DISPLAY_WIDTH - 1);
+    displayData((DISPLAY_WIDTH - 1) >> 8);
     
     // - Set panel border by Command 0x3C
-    displayCmd();
-    displaySel();
-    transmit(BORDER_WAVEFORM_CONTROL);
-    displayData();
-    transmit(0x05); // ?
-    displayDes();
+    displayCmd(BORDER_WAVEFORM_CONTROL);
+    displayData(0x05); // ?
 
     printString("done sending initialization code\r\n");
 
     // 4. Load Waveform LUT
     // - Sense temperature by int/ext TS by Command 0x18
-    displayCmd();
-    displaySel();
-    transmit(TEMP_SENSOR_CONTROL);
-    displayData();
-    transmit(0x80); // A[7:0] = 80h Internal temperature sensor
-    displayDes();
+    displayCmd(TEMP_SENSOR_CONTROL);
+    displayData(0x80); // A[7:0] = 80h Internal temperature sensor
+    
+    if (fast) {
+        // Load temperature value
+        displayCmd(DISPLAY_UPDATE_CONTROL2);
+        displayData(0xb1);
+        displayCmd(MASTER_ACTIVATION);
+        waitBusy();
+
+        // Write temperature value
+        displayCmd(WRITE_TO_TEMP_REGISTER);
+        displayData(0x64);
+        displayData(0x00);
+
+        // Load temperature value
+        displayCmd(DISPLAY_UPDATE_CONTROL2);
+        displayData(0x91);
+        displayCmd(MASTER_ACTIVATION);
+        waitBusy();
+    }
     
     // done at the end, wait for BUSY low anyway
     // - Load waveform LUT from OTP by Command 0x22, 0x20 or by MCU
     // - Wait BUSY Low
     waitBusy();
+    
+    displayDes();
 }
 
 void resetAddressCounter(void) {
+    displaySel();
+    
     // 5. Write Image and Drive Display Panel
     // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
-    displayCmd();
-    displaySel();
-    transmit(RAM_X_ADDRESS_COUNTER);
-    displayData();
-    transmit(RAM_X_OFFSET);
-    displayDes();
+    displayCmd(RAM_X_ADDRESS_COUNTER);
+    displayData(RAM_X_OFFSET);
     
-    displayCmd();
-    displaySel();
-    transmit(RAM_Y_ADDRESS_COUNTER);
-    displayData();
-    transmit(0);
-    transmit(0);
+    displayCmd(RAM_Y_ADDRESS_COUNTER);
+    displayData(0);
+    displayData(0);
+    
     displayDes();
 }
 
 void imageWrite(uint8_t data) {
+    displaySel();
+    
     // 5. Write Image and Drive Display Panel
     // - Write image data in RAM by Command 0x4E, 0x4F, 0x24, 0x26
-    displayCmd();
-    displaySel();
-    transmit(WRITE_RAM_BW);
-    displayData();
-    transmit(data);
-    displayDes();
+    displayCmd(WRITE_RAM_BW);
+    displayData(data);
     
-    // printString("done writing data to RAM\r\n");    
+    displayDes();
 }
 
-void updateDisplay(void) {
-    // - Set softstart setting by Command 0x0C
-    displayCmd();
+void updateDisplay(bool fast) {
     displaySel();
-    transmit(BOOSTER_SOFT_START_CONTROL);
-    displayData();
-    transmit(0x8b); // A[7:0] -> Soft start setting for Phase1 = 8Bh [POR]
-    transmit(0x9c); // B[7:0] -> Soft start setting for Phase2 = 9Ch [POR]
-    transmit(0x96); // C[7:0] -> Soft start setting for Phase3 = 96h [POR]
-    transmit(0x0f); // D[7:0] -> Duration setting = 0Fh [POR]
+    
+    // - Set softstart setting by Command 0x0C
+    /*
+    displaySel();
+    displayCmd(BOOSTER_SOFT_START_CONTROL);
+    displayData(0x8b); // A[7:0] -> Soft start setting for Phase1 = 8Bh [POR]
+    displayData(0x9c); // B[7:0] -> Soft start setting for Phase2 = 9Ch [POR]
+    displayData(0x96); // C[7:0] -> Soft start setting for Phase3 = 96h [POR]
+    displayData(0x0f); // D[7:0] -> Duration setting = 0Fh [POR]
     displayDes();
     
     printString("done setting softstart\r\n");
+     */
     
     // - Drive display panel by Command 0x22, 0x20
     // 0xf4, 0xf5, 0xf6, 0xf7 do full update (DISPLAY mode 1)
     // 0xfc, 0xfd, 0xfe, 0xff do partial update (DISPLAY mode 2)
-    // fast update as mentioned in the Good Display data sheet is not supported?
-    displayCmd();
-    displaySel();
-    transmit(DISPLAY_UPDATE_CONTROL2);
-    displayData();
-    transmit(0xf4);
-    displayDes();
-    
-    displayCmd();
-    displaySel();
-    transmit(MASTER_ACTIVATION);
-    displayDes();
+    // 0xc7 does fast update
+    displayCmd(DISPLAY_UPDATE_CONTROL2);
+    displayData(fast ? 0xc7 : 0xf4);
+    displayCmd(MASTER_ACTIVATION);
     
     // - Wait BUSY Low
     waitBusy();
@@ -199,15 +186,13 @@ void updateDisplay(void) {
 
     // 6. Power Off
     // - Deep sleep by Command 0x10
-    displayCmd();
-    displaySel();
-    transmit(DEEP_SLEEP_MODE);
-    displayData();
-    transmit(0x01); // Enter Deep Sleep Mode 1
-    displayDes();
+    displayCmd(DEEP_SLEEP_MODE);
+    displayData(0x11); // Deep Sleep Mode 2 (no need to retain RAM data)
     
     printString("done setting deep sleep\r\n");
     
     // - Power OFF
     // see 1. Power On
+    
+    displayDes();
 }
