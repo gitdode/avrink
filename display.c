@@ -15,6 +15,8 @@
 #include "eink.h"
 #include "usart.h"
 #include "utils.h"
+#include "pins.h"
+#include "spi.h"
 
 /**
  * Writes the given byte at the given index for the given bitmap height
@@ -86,12 +88,40 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
 // TODO write to display while reading from SRAM in sequential mode
 void sramToDisplay(void) {
     uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
+    
+    // set sequential mode
+    uint8_t status = sramReadStatus();
+    status &= ~(1 << MODE_PAGE);
+    status |= (1 << MODE_SEQU);
+    sramWriteStatus(status);
+    
+    sramSel();
+    transmit(SRAM_READ);
+    transmit(0x00);
+    transmit(0x00);
+    
+    displaySel();
+    
+    PORT_DSPI &= ~(1 << PIN_DC);
+    uint8_t byte = transmit(WRITE_RAM_BW);
+    
+    PORT_DSPI |= (1 << PIN_DC);
 
     for (uint16_t i = 0; i < bytes; i++) {
-        uint8_t byte = sramRead(i);
         // remove negation for dark mode :)
-        imageWrite(~byte);
+        byte = transmit(~byte);
     }
+    
+    displayDes();
+    
+    // set byte mode
+    // uint8_t status = sramReadStatus();
+    status &= ~(1 << MODE_PAGE);
+    status &= ~(1 << MODE_SEQU);
+    sramWriteStatus(status);    
+    
+    sramDes();
+    
 
     printString("done copying from SRAM to display\r\n");
 }
