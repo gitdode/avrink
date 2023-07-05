@@ -11,12 +11,11 @@
 #include "unifont.h"
 #include "dejavu.h"
 #include "bitmaps.h"
+#include "spi.h"
 #include "sram.h"
 #include "eink.h"
 #include "usart.h"
 #include "utils.h"
-#include "pins.h"
-#include "spi.h"
 
 /**
  * Writes the given byte at the given index for the given bitmap height
@@ -85,44 +84,26 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
     }
 }
 
-// TODO write to display while reading from SRAM in sequential mode
 void sramToDisplay(void) {
     uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
     
-    // set sequential mode
-    uint8_t status = sramReadStatus();
-    status &= ~(1 << MODE_PAGE);
-    status |= (1 << MODE_SEQU);
-    sramWriteStatus(status);
-    
+    sramWriteStatus(SRAM_SEQU);
     sramSel();
-    transmit(SRAM_READ);
-    transmit(0x00);
-    transmit(0x00);
+    sramInitRead(0x0);
     
     displaySel();
-    
-    PORT_DSPI &= ~(1 << PIN_DC);
+    displaySetCmd();
     uint8_t byte = transmit(WRITE_RAM_BW);
-    
-    PORT_DSPI |= (1 << PIN_DC);
-
+    displaySetData();
     for (uint16_t i = 0; i < bytes; i++) {
         // remove negation for dark mode :)
         byte = transmit(~byte);
     }
-    
     displayDes();
     
-    // set byte mode
-    // uint8_t status = sramReadStatus();
-    status &= ~(1 << MODE_PAGE);
-    status &= ~(1 << MODE_SEQU);
-    sramWriteStatus(status);    
-    
+    sramWriteStatus(SRAM_BYTE);
     sramDes();
     
-
     printString("done copying from SRAM to display\r\n");
 }
 
