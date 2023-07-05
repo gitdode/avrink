@@ -88,6 +88,7 @@ void sramToDisplay(void) {
     uint16_t bytes = DISPLAY_WIDTH * DISPLAY_H_BYTES;
     
     sramWriteStatus(SRAM_SEQU);
+    
     sramSel();
     sramInitRead(0x0);
     
@@ -100,11 +101,9 @@ void sramToDisplay(void) {
         byte = transmit(~byte);
     }
     displayDes();
-    
-    sramWriteStatus(SRAM_BYTE);
     sramDes();
     
-    printString("done copying from SRAM to display\r\n");
+    sramWriteStatus(SRAM_BYTE);
 }
 
 void setFrame(uint8_t byte) {
