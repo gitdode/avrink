@@ -8,7 +8,7 @@ with an AVR MCU (ATmega328P) and avr-libc.
 
 Currently implemented:
 
-* Nearly complete UTF-8 set of GNU Unifont
+* Nearly complete UTF-8 set (code points U+0000 to U+00FF) of GNU Unifont
 * Small subset of large glyphs in DejaVu: 0-9 and some special characters
 * Store font and bitmaps in program memory instead of RAM
 * Use SRAM as frame buffer
