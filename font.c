@@ -10,10 +10,22 @@
 #include "font.h"
 
 Glyph getGlyph(Font font, uint16_t code) {
-    for (size_t i = 0; i < font.length; i++) {
-        if (pgm_read_word(&font.glyphs[i].code) == code) {
+    
+    // https://en.wikipedia.org/wiki/Binary_search_algorithm
+    uint8_t l = 0;
+    uint8_t r = font.length - 1;
+    
+    while (l < font.length) {
+        uint8_t m = (l + r) / 2;
+        uint16_t c = pgm_read_word(&font.glyphs[m].code);
+        if (c < code) {
+            l = m + 1;
+        } else if (c > code) {
+            r = m - 1;
+        } else {
+            // found code point, get and return glyph
             static Glyph glyph;
-            memcpy_P(&glyph, &font.glyphs[i], sizeof (Glyph));
+            memcpy_P(&glyph, &font.glyphs[m], sizeof (Glyph));
             
             return glyph;
         }
