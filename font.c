@@ -12,10 +12,10 @@
 Glyph getGlyph(Font font, uint16_t code) {
     
     // https://en.wikipedia.org/wiki/Binary_search_algorithm
-    uint8_t l = 0;
-    uint8_t r = font.length - 1;
+    int16_t l = 0;
+    int16_t r = font.length - 1;
     
-    while (l < font.length) {
+    while (l <= r) {
         uint8_t m = (l + r) / 2;
         uint16_t c = pgm_read_word(&font.glyphs[m].code);
         if (c < code) {
