@@ -16,7 +16,7 @@ Glyph getGlyph(Font font, uint16_t code) {
     uint8_t r = font.length - 1;
     
     while (r != l) {
-        uint8_t m = ((l + r) / 2) + 1;
+        size_t m = (l + r + 1) / 2;
         if (pgm_read_word(&font.glyphs[m].code) > code) {
             r = m - 1;
         } else {
