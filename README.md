@@ -18,9 +18,14 @@ Currently implemented:
 * Write text and bitmaps via USART
 * Logging via USART
 
-Thanks to [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD)
+Thanks to:  
+
+* [https://github.com/adafruit/Adafruit_EPD](https://github.com/adafruit/Adafruit_EPD) 
 for helping me out with the display initialization!  
-Thanks to https://github.com/markbirss for telling me that fast update mode _is_ supported!  
+* [https://github.com/markbirss](https://github.com/markbirss) 
+for telling me that fast update mode _is_ supported!  
+* [https://github.com/sprintersb](https://github.com/sprintersb) 
+for helping me to improve the code and making it more efficient!
 
 <img src="https://luniks.net/other/AVRInk/AVRInk-06.jpg"/>
 
