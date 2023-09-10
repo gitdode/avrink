@@ -50,7 +50,7 @@ uint8_t writeChar(uint16_t row, uint16_t col, Font font, uint16_t code);
  * @param font
  * @param string
  */
-void writeString(uint16_t row, uint16_t col, Font font, char *string);
+void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *string);
 
 /**
  * Displays a demo for the awesome Unifont.

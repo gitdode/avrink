@@ -12,19 +12,17 @@
 #include "font.h"
 
 #define UNIFONT_DEMO_SIZE 7
+#define UNIFONT_DEMO_LINE_SIZE 64
 
 /**
- * Returns the given line of demo text.
- * @param line
- * @return address
+ * Demo text lines.
  */
-char * getUnifontDemo(uint8_t line);
+extern const __flash char* demoTextLines[UNIFONT_DEMO_SIZE];
 
 /**
- * Returns an instance of the Unifont font.
- * @return unifont
+ * Unifont font.
  */
-const Font getUnifont(void);
+extern const __flash Font unifontFont;
 
 #endif /* UNIFONT_H */
 

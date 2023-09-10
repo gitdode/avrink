@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <avr/pgmspace.h>
 #include "unifont.h"
 #include "dejavu.h"
@@ -49,8 +50,9 @@ static void bufferByte(uint16_t index, uint16_t *address, uint16_t height,
  * @param width
  * @param height
  */
-static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
-        uint16_t width, uint16_t height) {
+static void bufferBitmap(uint8_t row, uint16_t col,
+                         const __flash  uint8_t *bitmap,
+                         uint16_t width, uint16_t height) {
     uint16_t size = width * height / 8;
     uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
 
@@ -59,7 +61,7 @@ static void bufferBitmap(uint8_t row, uint16_t col, const uint8_t *bitmap,
     memset(rotated, 0, 8);
     uint16_t n = 0, w = 0;
     for (uint16_t i = 0; i < size; i++) {
-        uint8_t next = pgm_read_byte(&bitmap[n]);
+        uint8_t next = bitmap[n];
         // read bytes column by column
         n += width / 8;
         if ((i + 1) % height == 0) {
@@ -115,20 +117,20 @@ void setFrame(uint8_t byte) {
 }
 
 uint8_t writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
-    Bitmap bitmap = getBitmap(index);
-    bufferBitmap(row, col, bitmap.bitmap, bitmap.width, bitmap.height);
+    const __flash Bitmap *bitmap = & bitmaps[index];
+    bufferBitmap (row, col, bitmap->bitmap, bitmap->width, bitmap->height);
     
-    return bitmap.width;
+    return bitmap->width;
 }
 
-uint8_t writeGlyph(uint16_t row, uint16_t col, Font font, uint16_t code) {
-    Glyph glyph = getGlyph(font, code);
-    bufferBitmap(row, col, glyph.bitmap, glyph.width, font.height);
+uint8_t writeGlyph(uint16_t row, uint16_t col, const __flash Font *font, uint16_t code) {
+    const __flash Glyph *glyph = getGlyphAddress(font, code);
+    bufferBitmap(row, col, glyph->bitmap, glyph->width, font->height);
     
-    return glyph.width;
+    return glyph->width;
 }
 
-void writeString(uint16_t row, uint16_t col, Font font, char *string) {
+void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
         uint8_t c = (uint8_t) *string;
@@ -146,9 +148,13 @@ void writeString(uint16_t row, uint16_t col, Font font, char *string) {
 }
 
 void unifontDemo(void) {
-    Font unifont = getUnifont();
+    const __flash Font *unifont = &unifontFont;
+    
     for (uint8_t i = 0; i < UNIFONT_DEMO_SIZE; i++) {
-        writeString(i * 2, 0, unifont, getUnifontDemo(i));
+        const __flash char *line = demoTextLines[i];
+        char buf[UNIFONT_DEMO_LINE_SIZE];
+        strncpy_P(buf, line, UNIFONT_DEMO_LINE_SIZE - 1);
+        writeString(i * 2, 0, unifont, buf);
     }
 }
 

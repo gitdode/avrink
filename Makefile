@@ -1,17 +1,16 @@
-# Makefile to build and flash avrink.
+# Makefile to build and flash thermidity.
 #
 # Simplified version from: https://github.com/hexagon5un/AVR-Programming
 
 MCU = atmega328p
-# for NetBeans, see https://www.nongnu.org/avr-libc/user-manual/using_tools.html
-MMCU = __AVR_ATmega328P__
 F_CPU = 8000000
 BAUD = 9600
 PROGRAMMER_TYPE = avrispmkII
 PROGRAMMER_ARGS = 
 
 MAIN = avrink.c
-SRC = font.c unifont.c dejavu.c bitmaps.c usart.c spi.c sram.c eink.c cmd.c display.c
+SRC = bitmaps.c cmd.c dejavu.c display.c eink.c font.c spi.c sram.c \
+	unifont.c usart.c
 
 CC = avr-gcc
 OBJCOPY = avr-objcopy
@@ -20,19 +19,23 @@ AVRSIZE = avr-size
 AVRDUDE = avrdude
 
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU)UL -DBAUD=$(BAUD) 
-CFLAGS += -D$(MMCU)
-CFLAGS += -Os -I.
+CFLAGS += -O2 -I.
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums 
 CFLAGS += -Wall -Wstrict-prototypes
 CFLAGS += -g -ggdb
-CFLAGS += -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--relax
+CFLAGS += -ffunction-sections -fdata-sections -Wl,--gc-sections -mrelax
 CFLAGS += -std=gnu99
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105523
+CFLAGS += --param=min-pagesize=0
 
 TARGET = $(strip $(basename $(MAIN)))
 SRC += $(TARGET).c
 
 OBJ = $(SRC:.c=.o) 
-OBJ = $(SRC:.S=.o) 
+OBJ = $(SRC:.S=.o)
+	
+$(TARGET).elf: bitmaps.h cmd.h dejavu.h display.h eink.h font.h pins.h \
+	spi.h sram.h unifont.h usart.h utils.h Makefile
 
 all: $(TARGET).hex
 
@@ -50,7 +53,7 @@ eeprom: $(TARGET).eeprom
 	$(OBJDUMP) -S $< > $@
  
 size:  $(TARGET).elf
-	$(AVRSIZE) -C --mcu=$(MCU) $(TARGET).elf
+	$(AVRSIZE) -G $(TARGET).elf
 
 clean:
 	rm -f $(TARGET).elf $(TARGET).hex $(TARGET).obj \

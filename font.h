@@ -17,7 +17,7 @@ typedef struct {
     /** Width of the glyph. */
     const uint8_t width;
     /** Bitmap of the glyph. */
-    const uint8_t *bitmap;
+    const __flash uint8_t *bitmap;
 } Glyph;
 
 /**
@@ -26,7 +26,7 @@ typedef struct {
  */
 typedef struct {
     /** Glyphs of this font. */
-    const Glyph *glyphs;
+    const __flash Glyph *glyphs;
     /** Number of glyphs of this font. */
     const uint8_t length;
     /** Height of (the glyphs of) this font. */
@@ -34,13 +34,13 @@ typedef struct {
 } Font;
 
 /**
- * Returns the glyph at the given pseudo UTF-8 code point, i.e. 0x00f6 
- * for U+00F6 from the given font.
+ * Returns the flash address of the glyph at the given pseudo UTF-8 code
+ * point, i.e. 0x00f6 for U+00F6 from the given font.
  * If there is no glyph for that code point, a question mark is returned.
  * @param font
  * @param code
  * @return Glyph
  */
-Glyph getGlyph(Font font, uint16_t code);
+const __flash Glyph* getGlyphAddress(const __flash Font *font, uint16_t code);
 
 #endif /* FONT_H */
