@@ -40,9 +40,12 @@ static void text(char *data) {
     char *font = strtok(NULL, " ");
     char *text = strtok(NULL, "\0");
     
+    const __flash Font *unifont = &unifontFont;
+    const __flash Font *dejavu = &dejaVuFont;
+    
     switch(*font) {
-        case FONT_UNIFONT: writeString(row, col, getUnifont(), text); break;
-        case FONT_DEJAVU: writeString(row, col, getDejaVu(), text); break;
+        case FONT_UNIFONT: writeString(row, col, unifont, text); break;
+        case FONT_DEJAVU: writeString(row, col, dejavu, text); break;
         default: break;
     }
 }

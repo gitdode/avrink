@@ -8,7 +8,7 @@ BAUD = 9600
 PROGRAMMER_TYPE = avrispmkII
 PROGRAMMER_ARGS = 
 
-MAIN = thermidity.c
+MAIN = avrink.c
 SRC = bitmaps.c cmd.c dejavu.c display.c eink.c font.c spi.c sram.c \
 	unifont.c usart.c
 

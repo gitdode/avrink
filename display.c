@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <avr/pgmspace.h>
 #include "unifont.h"
 #include "dejavu.h"
 #include "bitmaps.h"
@@ -147,9 +148,13 @@ void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *str
 }
 
 void unifontDemo(void) {
-    Font unifont = getUnifont();
+    const __flash Font *unifont = &unifontFont;
+    
     for (uint8_t i = 0; i < UNIFONT_DEMO_SIZE; i++) {
-        writeString(i * 2, 0, unifont, getUnifontDemo(i));
+        const __flash char *line = demoTextLines[i];
+        char buf[UNIFONT_DEMO_LINE_SIZE];
+        strncpy_P(buf, line, UNIFONT_DEMO_LINE_SIZE - 1);
+        writeString(i * 2, 0, unifont, buf);
     }
 }
 

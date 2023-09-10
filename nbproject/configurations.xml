@@ -28,82 +28,46 @@
   </sourceRootList>
   <projectmakefile>/home/dode/dev/avrink/Makefile</projectmakefile>
   <confs>
-    <conf name="Default" type="0">
+    <conf name="Custom" type="1">
       <toolsSet>
-        <compilerSet>AVR|GNU</compilerSet>
+        <compilerSet>AVR2.1-GCC13.2|GNU</compilerSet>
         <dependencyChecking>false</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
-      <flagsDictionary>
-        <element flagsID="0" commonFlags="-Os -funsigned-char -g -ggdb -std=gnu99"/>
-      </flagsDictionary>
-      <codeAssistance>
-      </codeAssistance>
-      <makefileType>
-        <makeTool>
-          <buildCommandWorkingDir>/home/dode/dev/avrink</buildCommandWorkingDir>
-          <buildCommand>${MAKE} -f Makefile</buildCommand>
-          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
-          <executablePath></executablePath>
-          <cTool>
-            <incDir>
-              <pElem>.</pElem>
-            </incDir>
-            <preprocessorList>
-              <Elem>BAUD=9600</Elem>
-              <Elem>F_CPU=8000000UL</Elem>
-              <Elem>__AVR_ATmega328P__</Elem>
-            </preprocessorList>
-          </cTool>
-        </makeTool>
-        <preBuild>
-          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
-          <preBuildCommand></preBuildCommand>
-        </preBuild>
-      </makefileType>
-      <item path="/home/dode/dev/avrink/avrink.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
+      <compileType>
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>BAUD=9600</Elem>
+            <Elem>F_CPU=8000000UL</Elem>
+            <Elem>__AVR_ATmega328P__</Elem>
+            <Elem>__flash=volatile</Elem>
+          </preprocessorList>
         </cTool>
+      </compileType>
+      <item path="/home/dode/dev/avrink/avrink.c" ex="false" tool="0" flavor2="3">
       </item>
       <item path="/home/dode/dev/avrink/bitmaps.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/cmd.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/dejavu.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/display.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/eink.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/font.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/spi.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/sram.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/unifont.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="/home/dode/dev/avrink/usart.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
     </conf>
   </confs>

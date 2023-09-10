@@ -61,6 +61,6 @@ void unifontDemo(void);
  * Initializes the display, resets the address counter, copys image data from 
  * SRAM to display and updates it, either in fast or full update mode.
  */
-void doDisplay(bool fast);
+void display(bool fast);
 
 #endif /* DISPLAY_H */

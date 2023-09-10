@@ -14,8 +14,8 @@
             </sourceRootList>
             <confList>
                 <confElem>
-                    <name>Default</name>
-                    <type>0</type>
+                    <name>Custom</name>
+                    <type>1</type>
                 </confElem>
             </confList>
             <formatting>

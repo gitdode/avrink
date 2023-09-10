@@ -12,6 +12,12 @@
 #include "font.h"
 
 #define UNIFONT_DEMO_SIZE 7
+#define UNIFONT_DEMO_LINE_SIZE 64
+
+/**
+ * Demo text lines.
+ */
+extern const __flash char* demoTextLines[UNIFONT_DEMO_SIZE];
 
 /**
  * Unifont font.
