@@ -9,8 +9,8 @@ PROGRAMMER_TYPE = avrispmkII
 PROGRAMMER_ARGS = 
 
 MAIN = thermidity.c
-SRC = bitmaps.c dejavu.c display.c eink.c font.c meter.c spi.c sram.c \
-	unifont.c usart.c utils.c
+SRC = bitmaps.c cmd.c dejavu.c display.c eink.c font.c spi.c sram.c \
+	unifont.c usart.c
 
 CC = avr-gcc
 OBJCOPY = avr-objcopy
@@ -34,7 +34,7 @@ SRC += $(TARGET).c
 OBJ = $(SRC:.c=.o) 
 OBJ = $(SRC:.S=.o)
 	
-$(TARGET).elf: bitmaps.h dejavu.h display.h eink.h font.h meter.h pins.h \
+$(TARGET).elf: bitmaps.h cmd.h dejavu.h display.h eink.h font.h pins.h \
 	spi.h sram.h unifont.h usart.h utils.h Makefile
 
 all: $(TARGET).hex
