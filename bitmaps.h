@@ -8,6 +8,8 @@
 #ifndef BITMAPS_H
 #define BITMAPS_H
 
+#include <stdint.h>
+
 #define TUX 0
 #define LINUS 1
 
@@ -20,15 +22,13 @@ typedef struct {
     /** Height of the bitmap, must be a multiple of 8. */
     const uint16_t height;
     /** The actual bitmap. */
-    const uint8_t *bitmap;
+    const __flash uint8_t *bitmap;
 } Bitmap;
 
 /**
- * Returns the bitmap at the given index.
- * @param index
- * @return Bitmap
+ * Available bitmaps.
  */
-Bitmap getBitmap(uint8_t index);
+extern const __flash Bitmap bitmaps[];
 
 #endif /* BITMAPS_H */
 

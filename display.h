@@ -50,7 +50,7 @@ uint8_t writeChar(uint16_t row, uint16_t col, Font font, uint16_t code);
  * @param font
  * @param string
  */
-void writeString(uint16_t row, uint16_t col, Font font, char *string);
+void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *string);
 
 /**
  * Displays a demo for the awesome Unifont.
@@ -61,6 +61,6 @@ void unifontDemo(void);
  * Initializes the display, resets the address counter, copys image data from 
  * SRAM to display and updates it, either in fast or full update mode.
  */
-void display(bool fast);
+void doDisplay(bool fast);
 
 #endif /* DISPLAY_H */

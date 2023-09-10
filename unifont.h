@@ -14,17 +14,9 @@
 #define UNIFONT_DEMO_SIZE 7
 
 /**
- * Returns the given line of demo text.
- * @param line
- * @return address
+ * Unifont font.
  */
-char * getUnifontDemo(uint8_t line);
-
-/**
- * Returns an instance of the Unifont font.
- * @return unifont
- */
-const Font getUnifont(void);
+extern const __flash Font unifontFont;
 
 #endif /* UNIFONT_H */
 

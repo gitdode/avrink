@@ -53,10 +53,10 @@ void displayData(uint8_t data) {
 
 void initDisplay(bool fast) {
     // 1. Power On
-    // VCI already supplied - could supply by MCU output pin?
     // - Supply VCI
     // - Wait 10ms
-    _delay_ms(10);
+    // VCI already supplied, no need to wait
+    // _delay_ms(10);
     
     displaySel();
 
@@ -66,7 +66,7 @@ void initDisplay(bool fast) {
 
     // - HW Reset
     hwReset();
-    _delay_ms(100);
+    // _delay_ms(100);
     waitBusy();
 
     // - SW Reset by Command 0x12
@@ -173,7 +173,8 @@ void updateDisplay(bool fast) {
     displayData(0x9c); // B[7:0] -> Soft start setting for Phase2 = 9Ch [POR]
     displayData(0x96); // C[7:0] -> Soft start setting for Phase3 = 96h [POR]
     displayData(0x0f); // D[7:0] -> Duration setting = 0Fh [POR]
-    
+    displayDes();
+
     printString("done setting softstart\r\n");
      */
     

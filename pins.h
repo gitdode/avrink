@@ -15,7 +15,7 @@
 #define PORT_LED  PORTC
 #define PIN_LED   PC5
 
-/* SPI pins */
+/* SPI */
 #define DDR_SPI   DDRB
 #define PORT_SPI  PORTB
 #define PIN_SS    PB2
