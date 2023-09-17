@@ -8,6 +8,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "types.h"
+#include "bitmaps.h"
 #include "font.h"
 
 /**
@@ -30,7 +32,7 @@ void setFrame(uint8_t byte);
  * @param index
  * @return bitmap width
  */
-uint8_t writeBitmap(uint16_t row, uint16_t col, uint16_t index);
+width_t writeBitmap(row_t row, col_t col, uint16_t index);
 
 /**
  * Writes the glyph with the given pseudo UTF-8 code point with the given
@@ -41,7 +43,7 @@ uint8_t writeBitmap(uint16_t row, uint16_t col, uint16_t index);
  * @param code
  * @return glyph width
  */
-uint8_t writeChar(uint16_t row, uint16_t col, Font font, uint16_t code);
+width_t writeGlyph(row_t row, col_t col, const __flash Font *font, code_t code);
 
 /**
  * Writes the given string with the given font to the given row and column.
@@ -50,7 +52,7 @@ uint8_t writeChar(uint16_t row, uint16_t col, Font font, uint16_t code);
  * @param font
  * @param string
  */
-void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *string);
+void writeString(row_t row, col_t col, const __flash Font *font, char *string);
 
 /**
  * Displays a demo for the awesome Unifont.
