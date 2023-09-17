@@ -16,7 +16,7 @@ typedef uint8_t height_t;
 typedef uint8_t row_t;
 typedef uint8_t col_t;
 
-/* Font code (like UTF-8 code point) */
+/* Char code (like UTF-8 code point) */
 typedef uint8_t code_t;
 
 #endif /* TYPES_H */
