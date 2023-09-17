@@ -8,7 +8,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <avr/pgmspace.h>
+#include "display.h"
 #include "unifont.h"
 #include "dejavu.h"
 #include "bitmaps.h"
@@ -26,9 +28,10 @@
  * @param height
  * @param byte
  */
-static void bufferByte(uint16_t index, uint16_t *address, uint16_t height,
-        uint8_t byte) {
-    if (index % height == 0) {
+static void bufferByte(uint16_t index, uint16_t index_mod_height, 
+                       uint16_t *address, height_t height, uint8_t byte) {
+    // if (index % height == 0) {
+    if (index_mod_height == 0) {
         if (index > 0) {
             *address -= height / 8 - 1;
         }
@@ -50,22 +53,31 @@ static void bufferByte(uint16_t index, uint16_t *address, uint16_t height,
  * @param width
  * @param height
  */
-static void bufferBitmap(uint8_t row, uint16_t col,
-                         const __flash  uint8_t *bitmap,
-                         uint16_t width, uint16_t height) {
+static void bufferBitmap(row_t row, col_t col,
+                         const __flash uint8_t *bitmap,
+                         width_t width, height_t height) {
     uint16_t size = width * height / 8;
     uint16_t origin = DISPLAY_WIDTH * DISPLAY_H_BYTES + row - col * DISPLAY_H_BYTES;
 
     // rotate each 8 x 8 pixel 90° clockwise and flip horizontally
     uint8_t rotated[8];
     memset(rotated, 0, 8);
-    uint16_t n = 0, w = 0;
+    uint16_t n = 0, x = 0;
+    uint16_t i_mod_height = 0, i_div_height = 0, x_mod_height = 0;
     for (uint16_t i = 0; i < size; i++) {
         uint8_t next = bitmap[n];
+                
         // read bytes column by column
         n += width / 8;
-        if ((i + 1) % height == 0) {
-            n = i / height + 1;
+        // if ((i + 1) % height == 0) {
+        if (i_mod_height == height - 1) {
+            // n = i / height + 1;
+            n = i_div_height + 1;
+        }
+        
+        if (++i_mod_height == height) {
+            i_mod_height = 0;
+            i_div_height += 1;
         }
 
         // rotate 8 x 8 pixel
@@ -78,8 +90,12 @@ static void bufferBitmap(uint8_t row, uint16_t col,
         // buffer 8 x 8 rotated pixel
         if ((i + 1) % 8 == 0) {
             for (uint8_t r = 0; r < 8; r++) {
-                bufferByte(w, &origin, height, rotated[r]);
-                w++;
+                bufferByte(x, x_mod_height, &origin, height, rotated[r]);
+                x++;
+                
+                if (++x_mod_height == height) {
+                    x_mod_height = 0;
+                }
             }
             memset(rotated, 0, 8);
         }
@@ -116,21 +132,21 @@ void setFrame(uint8_t byte) {
     }
 }
 
-uint8_t writeBitmap(uint16_t row, uint16_t col, uint16_t index) {
-    const __flash Bitmap *bitmap = & bitmaps[index];
+width_t writeBitmap(row_t row, col_t col, uint16_t index) {
+    const __flash Bitmap *bitmap = &bitmaps[index];
     bufferBitmap (row, col, bitmap->bitmap, bitmap->width, bitmap->height);
     
     return bitmap->width;
 }
 
-uint8_t writeGlyph(uint16_t row, uint16_t col, const __flash Font *font, uint16_t code) {
+width_t writeGlyph(row_t row, col_t col, const __flash Font *font, code_t code) {
     const __flash Glyph *glyph = getGlyphAddress(font, code);
     bufferBitmap(row, col, glyph->bitmap, glyph->width, font->height);
     
     return glyph->width;
 }
 
-void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *string) {
+void writeString(row_t row, col_t col, const __flash Font *font, char *string) {
     uint8_t offset = 0;
     for (; *string != '\0'; string++) {
         uint8_t c = (uint8_t) *string;
@@ -140,7 +156,7 @@ void writeString(uint16_t row, uint16_t col, const __flash Font *font, char *str
             // multibyte, add 64 to get code point
             offset = 64;
         } else {
-            uint16_t code = c + offset;
+            code_t code = c + offset;
             col += writeGlyph(row, col, font, code);
             offset = 0;
         }

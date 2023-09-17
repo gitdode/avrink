@@ -9,6 +9,7 @@
 #define BITMAPS_H
 
 #include <stdint.h>
+#include "types.h"
 
 #define TUX 0
 #define LINUS 1
@@ -18,9 +19,9 @@
  */
 typedef struct {
     /** Width of the bitmap, must be a multiple of 8. */
-    const uint16_t width;
+    const width_t width;
     /** Height of the bitmap, must be a multiple of 8. */
-    const uint16_t height;
+    const height_t height;
     /** The actual bitmap. */
     const __flash uint8_t *bitmap;
 } Bitmap;
