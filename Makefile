@@ -35,7 +35,7 @@ OBJ = $(SRC:.c=.o)
 OBJ = $(SRC:.S=.o)
 	
 $(TARGET).elf: bitmaps.h cmd.h dejavu.h display.h eink.h font.h pins.h \
-	spi.h sram.h unifont.h usart.h utils.h Makefile
+	spi.h sram.h types.h unifont.h usart.h utils.h Makefile
 
 all: $(TARGET).hex
 
