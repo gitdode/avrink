@@ -13,6 +13,7 @@
 
 #define TUX 0
 #define LINUS 1
+#define PHOTO 2
 
 /**
  * A bitmap with its width and height, and data.
