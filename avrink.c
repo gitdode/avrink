@@ -127,6 +127,8 @@ int main(void) {
             setFrame(0x00);
             writeBitmap(1, 198, TUX);
             unifontDemo();
+            // max resolution image
+            // writeBitmap(0, 0, PHOTO);
             display(false);
             once = true;
         }
