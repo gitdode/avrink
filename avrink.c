@@ -32,10 +32,10 @@
 #include "utils.h"
 
 /* Timer0 interrupts per second */
-#define INTS_SEC  F_CPU / (64UL * 255)
+#define INTS_SEC  F_CPU / (256UL * 255)
 
 static bool once = false;
-static volatile uint8_t ints = 0;
+static volatile uint16_t ints = 0;
 
 ISR(TIMER0_COMPA_vect) {
     ints++;
@@ -88,8 +88,8 @@ static void initSPI(void) {
 static void initTimer(void) {
     // timer0 clear timer on compare match mode, TOP OCR0A
     TCCR0A |= (1 << WGM01);
-    // timer0 clock prescaler/64/255 ~ 61 Hz @ 1 MHz
-    TCCR0B |= (1 << CS01) | (1 << CS00);
+    // timer0 clock prescaler/256/255 ~ 123 Hz @ 8 MHz
+    TCCR0B |= (1 << CS02);
     OCR0A = 255;
 
     // enable timer0 compare match A interrupt
