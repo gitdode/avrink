@@ -34,7 +34,6 @@
 /* Timer0 interrupts per second */
 #define INTS_SEC  F_CPU / (256UL * 255)
 
-static bool once = false;
 static volatile uint16_t ints = 0;
 
 ISR(TIMER0_COMPA_vect) {
@@ -119,20 +118,16 @@ int main(void) {
 
     // enable global interrupts
     sei();
+    
+    // show a demo once at the start with full update mode
+    setFrame(0x00);
+    writeBitmap(1, 198, TUX);
+    unifontDemo();
+    // max resolution image
+    // writeBitmap(0, 0, PHOTO);
+    display(false);
 
     while (true) {
-        
-        // show a demo once at the start with full update mode
-        if (!once) {
-            setFrame(0x00);
-            writeBitmap(1, 198, TUX);
-            unifontDemo();
-            // max resolution image
-            // writeBitmap(0, 0, PHOTO);
-            display(false);
-            once = true;
-        }
-
         // display should not be updated more frequently than once every 180 seconds
         if (ints >= INTS_SEC * 180) {
             ints = 0;
